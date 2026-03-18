@@ -1,7 +1,8 @@
 ﻿:root {
-  --bg: #131417;
+  --bg: #0f1116;
   --paper: transparent;
   --ink: #ffffff;
+  --orb-color: #ff8a4c;
   --max: 1160px;
 }
 
@@ -17,6 +18,7 @@ body {
 }
 
 body {
+  position: relative;
   font-family: "Manrope", "Segoe UI", sans-serif;
   color: #f2f2f2;
   background: var(--bg);
@@ -24,22 +26,88 @@ body {
   overflow-x: hidden;
 }
 
-.webgl-bg {
+.background-media {
   position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.liquid-bg,
+.webgl-bg {
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: -2;
+  object-fit: cover;
+}
+
+.liquid-bg {
+  z-index: 1;
+  opacity: 0;
+  filter: saturate(0.92) contrast(1.05) brightness(0.86);
+  transition: opacity 900ms ease;
+}
+
+.webgl-bg {
+  z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 700ms ease;
+}
+
+.liquid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(130% 85% at 50% 10%, rgba(13, 15, 22, 0.2) 0%, rgba(13, 15, 22, 0.72) 80%),
+    linear-gradient(to bottom, rgba(6, 8, 12, 0.4) 0%, rgba(6, 8, 12, 0.8) 100%);
 }
 
 .noise {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: -1;
-  opacity: 0.05;
-  pointer-events: none;
+  z-index: 3;
+  opacity: 0.03;
   background-image: radial-gradient(rgba(255, 255, 255, 0.55) 0.45px, transparent 0);
   background-size: 3px 3px;
+}
+
+body.has-video .liquid-bg {
+  opacity: 1;
+}
+
+body.has-video .webgl-bg {
+  opacity: 0;
+  visibility: hidden;
+}
+
+body.no-video .liquid-bg {
+  display: none;
+}
+
+body.no-video .webgl-bg {
+  opacity: 1;
+  visibility: visible;
+}
+
+.color-orb {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 7;
+  opacity: 0.24;
+  background: radial-gradient(circle, var(--orb-color), rgba(255, 255, 255, 0));
+  filter: blur(30px) saturate(1.15);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
 }
 
 .container {
@@ -48,7 +116,9 @@ body {
 }
 
 main {
-  scroll-snap-type: y mandatory;
+  position: relative;
+  z-index: 5;
+  scroll-snap-type: y proximity;
   padding-block: 1rem;
 }
 
@@ -66,6 +136,8 @@ main {
   color: var(--ink);
   padding: clamp(1.35rem, 3vw, 2.5rem);
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  will-change: transform, opacity;
 }
 
 .frame-note {
@@ -78,6 +150,7 @@ main {
   font-size: clamp(0.48rem, 0.84vw, 0.66rem);
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
+  will-change: transform, opacity;
 }
 
 h1 {
@@ -85,7 +158,20 @@ h1 {
   font-size: clamp(3rem, 5vw, 4.2rem);
   line-height: 1;
   font-weight: 500;
+  letter-spacing: 0.01em;
   color: #fff;
+  will-change: transform, opacity;
+}
+
+.heading-line {
+  display: block;
+  overflow: hidden;
+}
+
+.heading-line > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
 }
 
 .word {
@@ -95,6 +181,9 @@ h1 {
   font-weight: 600;
   line-height: 1;
   color: #fff;
+  cursor: none;
+  user-select: none;
+  will-change: transform, opacity;
 }
 
 .word-center {
@@ -127,6 +216,7 @@ h1 {
   width: 8px;
   height: 8px;
   background: #fff;
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.65);
 }
 
 .cursor-ring {
@@ -144,14 +234,14 @@ h1 {
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 550ms ease, transform 550ms ease;
+  opacity: 1;
+  transform: none;
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.motion-word,
+.motion-fade {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 @media (max-width: 900px) {
@@ -160,8 +250,13 @@ h1 {
   }
 
   .cursor-dot,
-  .cursor-ring {
+  .cursor-ring,
+  .color-orb {
     display: none;
+  }
+
+  .liquid-bg {
+    filter: saturate(0.9) contrast(1.02) brightness(0.78);
   }
 
   .frame {
@@ -182,5 +277,9 @@ h1 {
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .liquid-bg {
+    opacity: 0.68;
   }
 }
