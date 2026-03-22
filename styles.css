@@ -1,7 +1,7 @@
 ﻿:root {
-  --bg: #0f1116;
+  --bg: #f5f2eb;
   --paper: transparent;
-  --ink: #ffffff;
+  --ink: #111111;
   --orb-color: #ff8a4c;
   --max: 1160px;
 }
@@ -20,7 +20,7 @@ body {
 body {
   position: relative;
   font-family: "Manrope", "Segoe UI", sans-serif;
-  color: #f2f2f2;
+  color: #111111;
   background: var(--bg);
   cursor: none;
   overflow-x: hidden;
@@ -46,7 +46,7 @@ body {
 .liquid-bg {
   z-index: 1;
   opacity: 0;
-  filter: saturate(0.92) contrast(1.05) brightness(0.86);
+  filter: saturate(0.86) contrast(0.98) brightness(1.06);
   transition: opacity 900ms ease;
 }
 
@@ -62,16 +62,16 @@ body {
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(130% 85% at 50% 10%, rgba(13, 15, 22, 0.2) 0%, rgba(13, 15, 22, 0.72) 80%),
-    linear-gradient(to bottom, rgba(6, 8, 12, 0.4) 0%, rgba(6, 8, 12, 0.8) 100%);
+    radial-gradient(130% 85% at 50% 10%, rgba(255, 252, 247, 0.14) 0%, rgba(255, 252, 247, 0.58) 80%),
+    linear-gradient(to bottom, rgba(255, 250, 242, 0.24) 0%, rgba(247, 242, 232, 0.74) 100%);
 }
 
 .noise {
   position: absolute;
   inset: 0;
   z-index: 3;
-  opacity: 0.03;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.55) 0.45px, transparent 0);
+  opacity: 0.02;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.18) 0.45px, transparent 0);
   background-size: 3px 3px;
 }
 
@@ -136,7 +136,7 @@ main {
   color: var(--ink);
   padding: clamp(1.35rem, 3vw, 2.5rem);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(17, 17, 17, 0.08);
   will-change: transform, opacity;
 }
 
@@ -148,7 +148,7 @@ main {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: clamp(0.48rem, 0.84vw, 0.66rem);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(17, 17, 17, 0.82);
   white-space: nowrap;
   will-change: transform, opacity;
 }
@@ -159,7 +159,7 @@ h1 {
   line-height: 1;
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: #fff;
+  color: #111111;
   will-change: transform, opacity;
 }
 
@@ -180,7 +180,7 @@ h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 600;
   line-height: 1;
-  color: #fff;
+  color: #111111;
   cursor: none;
   user-select: none;
   will-change: transform, opacity;
@@ -215,22 +215,22 @@ h1 {
 .cursor-dot {
   width: 8px;
   height: 8px;
-  background: #fff;
-  box-shadow: 0 0 26px rgba(255, 255, 255, 0.65);
+  background: #111111;
+  box-shadow: 0 0 20px rgba(17, 17, 17, 0.28);
 }
 
 .cursor-ring {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(17, 17, 17, 0.48);
   transition: width 220ms ease, height 220ms ease, border-color 220ms ease, background-color 220ms ease;
 }
 
 .cursor-ring.active {
   width: 52px;
   height: 52px;
-  border-color: rgba(255, 255, 255, 0.95);
-  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(17, 17, 17, 0.7);
+  background-color: rgba(17, 17, 17, 0.06);
 }
 
 .reveal {
@@ -256,7 +256,7 @@ h1 {
   }
 
   .liquid-bg {
-    filter: saturate(0.9) contrast(1.02) brightness(0.78);
+    filter: saturate(0.84) contrast(0.98) brightness(1.02);
   }
 
   .frame {
