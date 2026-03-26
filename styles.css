@@ -35,6 +35,7 @@ body {
 }
 
 .liquid-bg,
+.liquid-poster,
 .webgl-bg {
   position: absolute;
   inset: 0;
@@ -48,6 +49,15 @@ body {
   opacity: 0;
   filter: saturate(0.86) contrast(0.98) brightness(1.06);
   transition: opacity 900ms ease;
+}
+
+.liquid-poster {
+  z-index: 0;
+  opacity: 1;
+  background: center center / cover no-repeat url("media/main-bg-poster.jpg?v=20260326-fast1");
+  filter: saturate(0.86) contrast(0.98) brightness(1.06);
+  transform: scale(1.02);
+  transition: opacity 700ms ease, transform 1200ms ease;
 }
 
 .webgl-bg {
@@ -79,6 +89,11 @@ body.has-video .liquid-bg {
   opacity: 1;
 }
 
+body.has-video .liquid-poster {
+  opacity: 0;
+  transform: scale(1);
+}
+
 body.has-video .webgl-bg {
   opacity: 0;
   visibility: hidden;
@@ -86,6 +101,10 @@ body.has-video .webgl-bg {
 
 body.no-video .liquid-bg {
   display: none;
+}
+
+body.no-video .liquid-poster {
+  opacity: 0;
 }
 
 body.no-video .webgl-bg {

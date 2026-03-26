@@ -251,7 +251,6 @@ function initGsapMotion() {
 
 initGsapMotion();
 
-document.body.classList.add('no-video');
 let webglInitialized = false;
 
 function initWebGLBackground() {
@@ -439,6 +438,7 @@ function initWebGLBackground() {
 
 function initVideoBackground() {
   if (!liquidVideo) {
+    document.body.classList.add('no-video');
     initWebGLBackground();
     return;
   }
@@ -446,28 +446,28 @@ function initVideoBackground() {
   liquidVideo.muted = true;
   liquidVideo.playsInline = true;
   liquidVideo.defaultMuted = true;
+  liquidVideo.setAttribute('muted', '');
+  liquidVideo.setAttribute('playsinline', '');
 
   let fallbackActivated = false;
+  let videoActivated = false;
+
+  const clearVideoState = () => {
+    document.body.classList.remove('has-video', 'no-video');
+  };
 
   const activateFallback = () => {
-    if (fallbackActivated) return;
+    if (fallbackActivated || videoActivated) return;
     fallbackActivated = true;
-    document.body.classList.remove('has-video');
+    clearVideoState();
     document.body.classList.add('no-video');
     initWebGLBackground();
   };
 
-  liquidVideo.addEventListener('error', activateFallback, { once: true });
-
-  if (prefersReducedMotion) {
-    document.body.classList.remove('no-video');
-    document.body.classList.add('has-video');
-    liquidVideo.pause();
-    return;
-  }
-
   const activateVideo = () => {
-    document.body.classList.remove('no-video');
+    if (videoActivated || fallbackActivated) return;
+    videoActivated = true;
+    clearVideoState();
     document.body.classList.add('has-video');
   };
 
@@ -475,17 +475,44 @@ function initVideoBackground() {
     const playPromise = liquidVideo.play();
 
     if (playPromise && typeof playPromise.then === 'function') {
-      playPromise.then(activateVideo).catch(() => {
-        activateFallback();
-      });
+      playPromise.then(() => {
+        if (liquidVideo.readyState >= 2 && !liquidVideo.paused) {
+          activateVideo();
+        }
+      }).catch(() => {});
       return;
     }
 
-    activateVideo();
+    if (liquidVideo.readyState >= 2) {
+      activateVideo();
+    }
   };
 
+  liquidVideo.addEventListener('error', activateFallback, { once: true });
+  liquidVideo.addEventListener('playing', activateVideo, { once: true });
+  liquidVideo.addEventListener('canplay', tryPlay, { once: true });
   liquidVideo.addEventListener('loadeddata', tryPlay, { once: true });
-  window.setTimeout(tryPlay, 250);
+
+  if (prefersReducedMotion) {
+    activateVideo();
+    liquidVideo.pause();
+    return;
+  }
+
+  const fallbackTimer = window.setTimeout(() => {
+    if (!videoActivated) {
+      activateFallback();
+    }
+  }, 4000);
+
+  const clearFallbackTimer = () => {
+    window.clearTimeout(fallbackTimer);
+  };
+
+  liquidVideo.addEventListener('playing', clearFallbackTimer, { once: true });
+  liquidVideo.addEventListener('error', clearFallbackTimer, { once: true });
+
+  tryPlay();
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -493,8 +520,12 @@ function initVideoBackground() {
       return;
     }
 
+    if (prefersReducedMotion || fallbackActivated) return;
+
     liquidVideo.play().catch(() => {
-      activateFallback();
+      if (!videoActivated) {
+        activateFallback();
+      }
     });
   });
 }

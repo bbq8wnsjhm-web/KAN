@@ -1,20 +1,22 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Как найти — Pulse Atelier</title>
-  <meta name="description" content="Страница Как найти" />
+  <title>РљР°Рє РЅР°Р№С‚Рё вЂ” Pulse Atelier</title>
+  <meta name="description" content="РЎС‚СЂР°РЅРёС†Р° РљР°Рє РЅР°Р№С‚Рё" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260326-find" />
+  <link rel="preload" as="image" href="media/main-bg-poster.jpg?v=20260326-fast1" />
+  <link rel="stylesheet" href="styles.css?v=20260326-fast1" />
 </head>
 <body>
   <div class="background-media" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;">
-    <video class="liquid-bg" autoplay muted loop playsinline preload="auto" tabindex="-1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-      <source src="media/main-bg.mp4?v=20260326b" type="video/mp4" />
+    <video class="liquid-bg" autoplay muted loop playsinline preload="auto" poster="media/main-bg-poster.jpg?v=20260326-fast1" tabindex="-1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      <source src="media/main-bg.mp4?v=20260326-fast1" type="video/mp4" />
     </video>
+    <div class="liquid-poster" aria-hidden="true"></div>
     <canvas class="webgl-bg" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></canvas>
     <div class="liquid-overlay"></div>
     <div class="noise"></div>
@@ -26,16 +28,17 @@
   <main class="subpage-main">
     <section class="subpage-panel container panel reveal" data-tone="calm">
       <article class="frame subpage-frame subpage-frame-find">
-        <a class="frame-note frame-note-link subpage-note motion-fade" href="index.html">КЛУБ ГРАФИЧЕСКОГО ДИЗАЙНА</a>
-        <a class="subpage-link subpage-link-find-top motion-word" href="kto-my.html" data-color="#ff8a4c">как найти</a>
-        <a class="subpage-link subpage-link-find-bottom-left motion-word" href="chto-my-delaem.html" data-color="#5ab7ff">что делаем</a>
-        <h1 class="subpage-title subpage-title--bottom-right motion-heading-single">как найти</h1>
+        <a class="frame-note frame-note-link subpage-note motion-fade" href="index.html">РљР›РЈР‘ Р“Р РђР¤РР§Р•РЎРљРћР“Рћ Р”РР—РђР™РќРђ</a>
+        <a class="subpage-link subpage-link-find-top motion-word" href="kto-my.html" data-color="#ff8a4c">РєР°Рє РЅР°Р№С‚Рё</a>
+        <a class="subpage-link subpage-link-find-bottom-left motion-word" href="chto-my-delaem.html" data-color="#5ab7ff">С‡С‚Рѕ РґРµР»Р°РµРј</a>
+        <h1 class="subpage-title subpage-title--bottom-right motion-heading-single">РєР°Рє РЅР°Р№С‚Рё</h1>
       </article>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="script.js?v=20260326-pages"></script>
+  <script src="script.js?v=20260326-fast1"></script>
 </body>
 </html>
+
