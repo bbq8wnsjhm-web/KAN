@@ -13,7 +13,7 @@
 <body>
   <div class="background-media" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;">
     <video class="liquid-bg" autoplay muted loop playsinline preload="auto" tabindex="-1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-      <source src="media/liquid2.mp4" type="video/mp4" />
+      <source src="media/main-bg.mp4?v=20260326b" type="video/mp4" />
     </video>
     <canvas class="webgl-bg" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></canvas>
     <div class="liquid-overlay"></div>
@@ -26,24 +26,40 @@
 
   <main style="position:relative;z-index:5;">
     <section id="hero" class="panel container reveal" data-tone="calm">
-      <article class="frame">
-        <p class="frame-note motion-fade">каждый цвет живет своей таинственной жизнью</p>
-        <h1 class="motion-heading">Прототип</h1>
-        <p class="word word-center motion-word" data-color="#ff8a4c">увидеть</p>
+      <article class="frame frame-grid">
+        <a class="frame-note frame-note-link motion-fade" href="index.html">КЛУБ ГРАФИЧЕСКОГО ДИЗАЙНА</a>
+        <h1 class="hero-line motion-heading motion-heading-single">Каждую пятницу мы идём...</h1>
+        <p class="word word-search motion-word" data-color="#ff8a4c">искать</p>
       </article>
     </section>
 
     <section id="showcase" class="panel container reveal" data-tone="expressive">
-      <article class="frame">
-        <p class="frame-note motion-fade">каждый цвет живет своей таинственной жизнью</p>
-        <p class="word word-left motion-word" data-color="#5ab7ff">ощутить</p>
+      <article class="frame frame-grid">
+        <a class="frame-note frame-note-link motion-fade" href="index.html">КЛУБ ГРАФИЧЕСКОГО ДИЗАЙНА</a>
+        <p class="word word-show motion-word" data-color="#5ab7ff">показывать</p>
       </article>
     </section>
 
-    <section id="contact" class="panel container reveal" data-tone="calm">
-      <article class="frame">
-        <p class="frame-note motion-fade">каждый цвет живет своей таинственной жизнью</p>
-        <p class="word word-right motion-word" data-color="#d884ff">потрогать</p>
+    <section id="lab" class="panel container reveal" data-tone="calm">
+      <article class="frame frame-grid">
+        <a class="frame-note frame-note-link motion-fade" href="index.html">КЛУБ ГРАФИЧЕСКОГО ДИЗАЙНА</a>
+        <p class="word word-experiment motion-word" data-color="#d884ff">эксперементировать</p>
+      </article>
+    </section>
+
+    <section id="footer-scene" class="panel container reveal" data-tone="expressive">
+      <article class="frame frame-grid frame-grid-final">
+        <a class="frame-note frame-note-link footer-note motion-fade" href="index.html">КЛУБ ГРАФИЧЕСКОГО ДИЗАЙНА</a>
+        <div class="footer-title-wrap">
+          <h2 class="mega-word motion-heading-single">Д Е Л А Т Ь</h2>
+        </div>
+        <nav class="footer-nav footer-nav-left" aria-label="Информация">
+          <a class="footer-link motion-word" href="kto-my.html" data-color="#ff8a4c">КТО МЫ</a>
+          <a class="footer-link motion-word footer-link-subtle" href="chto-my-delaem.html" data-color="#5ab7ff">что мы делаем</a>
+        </nav>
+        <nav class="footer-nav footer-nav-right" aria-label="Контакты">
+          <a class="footer-link motion-word" href="kak-naiti.html" data-color="#d884ff">как найти</a>
+        </nav>
       </article>
     </section>
   </main>

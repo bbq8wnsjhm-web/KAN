@@ -17,6 +17,10 @@ let orbEnergy = 0;
 
 function splitHeadingLines() {
   document.querySelectorAll('.motion-heading').forEach((heading) => {
+    if (heading.classList.contains('motion-heading-single')) {
+      return;
+    }
+
     const text = heading.textContent.trim();
     if (!text) return;
 
@@ -99,42 +103,69 @@ function initGsapMotion() {
       el.style.opacity = '1';
       el.style.transform = 'none';
     });
+    document.querySelectorAll('.motion-heading-single').forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  const initialPanel = panels[0];
+  if (initialPanel) {
+    const initialLines = initialPanel.querySelectorAll('.heading-line > span');
+    const initialSingleHeading = initialPanel.querySelector('.motion-heading-single');
+    const initialNote = initialPanel.querySelector('.motion-fade');
+    const initialWords = initialPanel.querySelectorAll('.motion-word');
+    const initialTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-  heroTimeline
-    .to('#hero .heading-line > span', {
-      yPercent: 0,
-      opacity: 1,
-      duration: 1,
-      stagger: 0.08
-    })
-    .to('#hero .motion-fade', {
-      y: 0,
-      opacity: 1,
-      duration: 0.9
-    }, '-=0.7')
-    .to('#hero .motion-word', {
-      y: 0,
-      opacity: 1,
-      duration: 0.95
-    }, '-=0.6');
+    if (initialLines.length) {
+      initialTimeline.to(initialLines, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.08
+      });
+    } else if (initialSingleHeading) {
+      initialTimeline.to(initialSingleHeading, {
+        y: 0,
+        opacity: 1,
+        duration: 1
+      });
+    }
+
+    if (initialNote) {
+      initialTimeline.to(initialNote, {
+        y: 0,
+        opacity: 1,
+        duration: 0.9
+      }, '-=0.7');
+    }
+
+    if (initialWords.length) {
+      initialTimeline.to(initialWords, {
+        y: 0,
+        opacity: 1,
+        duration: 0.95,
+        stagger: 0.08
+      }, '-=0.6');
+    }
+  }
 
   const sectionSettings = [
     { tone: 'calm', frameY: 42, wordY: 24, parallax: -4, scrub: 1.2 },
     { tone: 'expressive', frameY: 56, wordY: 34, parallax: -8, scrub: 0.9 },
-    { tone: 'calm', frameY: 36, wordY: 20, parallax: -5, scrub: 1.3 }
+    { tone: 'calm', frameY: 36, wordY: 20, parallax: -5, scrub: 1.3 },
+    { tone: 'expressive', frameY: 28, wordY: 14, parallax: -3, scrub: 1.05 }
   ];
 
   panels.forEach((panel, index) => {
     const frame = panel.querySelector('.frame');
     const note = panel.querySelector('.motion-fade');
-    const word = panel.querySelector('.motion-word');
+    const panelWords = panel.querySelectorAll('.motion-word');
     const lines = panel.querySelectorAll('.heading-line > span');
+    const singleHeading = panel.querySelector('.motion-heading-single');
     const cfg = sectionSettings[index] || sectionSettings[0];
 
     if (index > 0) {
@@ -161,12 +192,20 @@ function initGsapMotion() {
         }, '-=0.72');
       }
 
+      if (!lines.length && singleHeading) {
+        tl.to(singleHeading, {
+          y: 0,
+          opacity: 1,
+          duration: 0.9
+        }, '-=0.72');
+      }
+
       if (note) {
         tl.to(note, { y: 0, opacity: 1, duration: 0.8 }, '-=0.62');
       }
 
-      if (word) {
-        tl.to(word, { y: 0, opacity: 1, duration: 0.9 }, '-=0.58');
+      if (panelWords.length) {
+        tl.to(panelWords, { y: 0, opacity: 1, duration: 0.9, stagger: 0.08 }, '-=0.58');
       }
     }
 
@@ -183,8 +222,8 @@ function initGsapMotion() {
       });
     }
 
-    if (word) {
-      gsap.to(word, {
+    if (panelWords.length) {
+      gsap.to(panelWords, {
         yPercent: cfg.tone === 'expressive' ? -10 : -5,
         xPercent: cfg.tone === 'expressive' ? 2.5 : 0,
         ease: 'none',

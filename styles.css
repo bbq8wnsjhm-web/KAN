@@ -111,7 +111,7 @@ body.no-video .webgl-bg {
 }
 
 .container {
-  width: min(100% - 3.2rem, var(--max));
+  width: min(100% - 1.2rem, var(--max));
   margin-inline: auto;
 }
 
@@ -136,8 +136,13 @@ main {
   color: var(--ink);
   padding: clamp(1.35rem, 3vw, 2.5rem);
   overflow: hidden;
-  border: 1px solid rgba(17, 17, 17, 0.08);
   will-change: transform, opacity;
+}
+
+.frame-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto 1fr auto;
 }
 
 .frame-note {
@@ -153,14 +158,30 @@ main {
   will-change: transform, opacity;
 }
 
+.frame-note-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.frame-note-link:hover,
+.frame-note-link:focus-visible {
+  opacity: 0.72;
+}
+
 h1 {
   margin: 0;
-  font-size: clamp(3rem, 5vw, 4.2rem);
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-size: clamp(2.2rem, 4.1vw, 3.9rem);
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: 0.34em;
   color: #111111;
   will-change: transform, opacity;
+}
+
+h2 {
+  margin: 0;
+  color: #111111;
+  font-family: "Syne", sans-serif;
 }
 
 .heading-line {
@@ -177,8 +198,8 @@ h1 {
 .word {
   margin: 0;
   position: absolute;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 600;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 500;
   line-height: 1;
   color: #111111;
   cursor: none;
@@ -186,19 +207,105 @@ h1 {
   will-change: transform, opacity;
 }
 
-.word-center {
-  left: 23%;
-  top: 63%;
+.hero-line {
+  grid-column: 1 / 13;
+  align-self: start;
+  margin-top: 0.7rem;
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  letter-spacing: 0.26em;
 }
 
-.word-left {
-  left: 4%;
-  bottom: 8%;
+.motion-heading-single {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-.word-right {
-  right: 4%;
-  bottom: 8%;
+.word-search {
+  left: 7%;
+  top: 53%;
+}
+
+.word-show {
+  left: 1.5%;
+  bottom: 11%;
+}
+
+.word-experiment {
+  right: 2%;
+  bottom: 14%;
+}
+
+.frame-grid-final {
+  min-height: calc(100svh - 2rem);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ". note note"
+    "title title title"
+    "nav-left nav-left nav-right";
+  align-items: stretch;
+}
+
+.mega-word {
+  font-size: clamp(4.6rem, 11vw, 9.6rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  line-height: 0.9;
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
+}
+
+.footer-note {
+  position: static;
+  grid-area: note;
+  justify-self: end;
+  align-self: start;
+  margin-bottom: 0;
+}
+
+.footer-title-wrap {
+  grid-area: title;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.footer-nav {
+  display: grid;
+  align-items: end;
+  gap: 0.65rem;
+  align-self: end;
+  margin: 0;
+  padding-bottom: 0.45rem;
+}
+
+.footer-link {
+  position: static;
+  display: inline-block;
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.45rem);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer-link-subtle {
+  text-transform: none;
+}
+
+.footer-nav-left {
+  grid-area: nav-left;
+  justify-self: start;
+}
+
+.footer-nav-right {
+  grid-area: nav-right;
+  justify-self: end;
 }
 
 .cursor-dot,
@@ -244,6 +351,195 @@ h1 {
   transform: translateY(20px);
 }
 
+.subpage-main {
+  position: relative;
+  z-index: 5;
+  min-height: 100svh;
+  display: grid;
+  align-items: start;
+  padding: 1rem 0;
+}
+
+.subpage-panel {
+  min-height: calc(100svh - 2rem);
+  display: grid;
+  align-content: start;
+}
+
+.subpage-frame {
+  min-height: calc(100svh - 2rem);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "top-left top-left top-left . . . . . . note note note"
+    ". . . . . . . . . . . ."
+    "bottom-left bottom-left bottom-left . . . . . . bottom-right bottom-right bottom-right";
+  padding: clamp(1.35rem, 3vw, 2.5rem);
+}
+
+.subpage-note {
+  position: static;
+  grid-area: note;
+  justify-self: end;
+  align-self: start;
+  margin: 0;
+}
+
+.subpage-title {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #111111;
+  white-space: nowrap;
+}
+
+.subpage-title--top-left {
+  grid-area: top-left;
+  align-self: start;
+  justify-self: start;
+}
+
+.subpage-title--bottom-left {
+  grid-area: bottom-left;
+  align-self: end;
+  justify-self: start;
+}
+
+.subpage-title--bottom-right {
+  grid-area: bottom-right;
+  align-self: end;
+  justify-self: end;
+}
+
+.subpage-link-block {
+  display: grid;
+  gap: 0.7rem;
+  align-self: end;
+}
+
+.subpage-link-block--top-left {
+  grid-area: top-left;
+  justify-self: start;
+  align-self: start;
+}
+
+.subpage-link-block--bottom-left {
+  grid-area: bottom-left;
+  justify-self: start;
+}
+
+.subpage-link-block--bottom-right {
+  grid-area: bottom-right;
+  justify-self: end;
+  text-align: right;
+}
+
+.subpage-link {
+  display: inline-block;
+  margin: 0;
+  color: rgba(17, 17, 17, 0.34);
+  text-decoration: none;
+  font-size: clamp(1rem, 1.35vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color 220ms ease;
+}
+
+.subpage-link:hover,
+.subpage-link:focus-visible {
+  color: #111111;
+}
+
+.subpage-link.is-active {
+  color: #111111;
+}
+
+.subpage-frame-kto {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "top-left top-left top-left . . . . . . note note note"
+    ". . . . . . . . . . . ."
+    "bottom-left bottom-left bottom-left . . . . . . bottom-right bottom-right bottom-right";
+}
+
+.subpage-frame-kto .subpage-title--top-left {
+  align-self: start;
+  justify-self: start;
+  font-size: clamp(2.1rem, 3.2vw, 2.9rem);
+  font-weight: 500;
+}
+
+.subpage-link-kto-left {
+  grid-area: bottom-left;
+  align-self: end;
+  justify-self: start;
+}
+
+.subpage-link-kto-right {
+  grid-area: bottom-right;
+  align-self: end;
+  justify-self: end;
+  text-align: right;
+}
+
+.subpage-frame-what {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "top-left top-left top-left . . . . . . note note note"
+    ". . . . . . . . . . . ."
+    "bottom-left bottom-left bottom-left . . . . . . bottom-right bottom-right bottom-right";
+}
+
+.subpage-link-what-top {
+  grid-area: top-left;
+  align-self: start;
+  justify-self: start;
+}
+
+.subpage-frame-what .subpage-title--bottom-left {
+  font-size: clamp(2.1rem, 3.2vw, 2.9rem);
+  font-weight: 500;
+}
+
+.subpage-link-what-right {
+  grid-area: bottom-right;
+  align-self: end;
+  justify-self: end;
+  text-align: right;
+}
+
+.subpage-frame-find {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "top-left top-left top-left . . . . . . note note note"
+    ". . . . . . . . . . . ."
+    "bottom-left bottom-left bottom-left . . . . . . bottom-right bottom-right bottom-right";
+}
+
+.subpage-link-find-top {
+  grid-area: top-left;
+  align-self: start;
+  justify-self: start;
+}
+
+.subpage-link-find-bottom-left {
+  grid-area: bottom-left;
+  align-self: end;
+  justify-self: start;
+}
+
+.subpage-frame-find .subpage-title--bottom-right {
+  font-size: clamp(2.1rem, 3.2vw, 2.9rem);
+  font-weight: 500;
+}
+
 @media (max-width: 900px) {
   body {
     cursor: auto;
@@ -263,9 +559,121 @@ h1 {
     min-height: 82svh;
   }
 
-  .word-center {
-    left: 19%;
-    top: 66%;
+  .frame-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    letter-spacing: 0.18em;
+    line-height: 1.2;
+  }
+
+  .hero-line {
+    grid-column: 1;
+    margin-top: 1.8rem;
+    white-space: normal;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    letter-spacing: 0.16em;
+  }
+
+  .mega-word {
+    font-size: clamp(3.2rem, 14vw, 5.4rem);
+    letter-spacing: 0.12em;
+  }
+
+  .word-search {
+    left: 8%;
+    top: 52%;
+  }
+
+  .word-show {
+    left: 3%;
+    bottom: 9%;
+  }
+
+  .word-experiment {
+    right: 3%;
+    bottom: 11%;
+  }
+
+  .frame-grid-final {
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas:
+      ". note note"
+      "title title title"
+      "nav-left nav-left nav-right";
+  }
+
+  .footer-nav {
+    gap: 0.5rem;
+  }
+
+  .footer-link {
+    font-size: clamp(0.95rem, 3.4vw, 1.2rem);
+  }
+
+  .subpage-frame {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "note"
+      "top-left"
+      "bottom-left"
+      "bottom-right";
+    gap: 1.4rem;
+  }
+
+  .subpage-note,
+  .subpage-title--bottom-right,
+  .subpage-link-block--bottom-right {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .subpage-link-block {
+    gap: 0.55rem;
+  }
+
+  .subpage-title {
+    font-size: clamp(1.7rem, 6vw, 2.2rem);
+  }
+
+  .subpage-link {
+    font-size: clamp(0.95rem, 3.4vw, 1.15rem);
+  }
+
+  .subpage-frame-kto {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "note"
+      "top-left"
+      "bottom-left"
+      "bottom-right";
+    gap: 1.4rem;
+  }
+
+  .subpage-link-kto-right {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .subpage-frame-what,
+  .subpage-frame-find {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "note"
+      "top-left"
+      "bottom-left"
+      "bottom-right";
+    gap: 1.4rem;
+  }
+
+  .subpage-link-what-right,
+  .subpage-frame-find .subpage-title--bottom-right {
+    justify-self: start;
+    text-align: left;
   }
 }
 
