@@ -156,7 +156,6 @@ function initGsapMotion() {
   const sectionSettings = [
     { tone: 'calm', frameY: 42, wordY: 24, parallax: -4, scrub: 1.2 },
     { tone: 'expressive', frameY: 56, wordY: 34, parallax: -8, scrub: 0.9 },
-    { tone: 'calm', frameY: 36, wordY: 20, parallax: -5, scrub: 1.3 },
     { tone: 'expressive', frameY: 28, wordY: 14, parallax: -3, scrub: 1.05 }
   ];
 

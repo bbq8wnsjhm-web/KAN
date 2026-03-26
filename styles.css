@@ -228,8 +228,8 @@ h2 {
 }
 
 .word-show {
-  left: 1.5%;
-  bottom: 11%;
+  left: 2%;
+  top: 11%;
 }
 
 .word-experiment {
@@ -588,7 +588,7 @@ h2 {
 
   .word-show {
     left: 3%;
-    bottom: 9%;
+    top: 9%;
   }
 
   .word-experiment {
