@@ -1,19 +1,50 @@
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+const finePointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
-const dot = document.querySelector('.cursor-dot');
-const ring = document.querySelector('.cursor-ring');
-const orb = document.querySelector('.color-orb');
-const words = document.querySelectorAll('.motion-word');
-const panels = document.querySelectorAll('.panel');
-const liquidVideo = document.querySelector('.liquid-bg');
+const dom = {
+  body: document.body,
+  dot: document.querySelector('.cursor-dot'),
+  ring: document.querySelector('.cursor-ring'),
+  orb: document.querySelector('.color-orb'),
+  words: Array.from(document.querySelectorAll('.motion-word')),
+  panels: Array.from(document.querySelectorAll('.panel')),
+  liquidVideo: document.querySelector('.liquid-bg'),
+  liquidOverlay: document.querySelector('.liquid-overlay'),
+  canvas: document.querySelector('.webgl-bg')
+};
 
-let mouseX = window.innerWidth * 0.5;
-let mouseY = window.innerHeight * 0.5;
-let ringX = mouseX;
-let ringY = mouseY;
-let orbX = mouseX;
-let orbY = mouseY;
-let orbEnergy = 0;
+const interaction = {
+  mouseX: window.innerWidth * 0.5,
+  mouseY: window.innerHeight * 0.5,
+  ringX: window.innerWidth * 0.5,
+  ringY: window.innerHeight * 0.5,
+  orbX: window.innerWidth * 0.5,
+  orbY: window.innerHeight * 0.5,
+  orbEnergy: 0
+};
+
+const backgroundStateClasses = ['has-video', 'no-video', 'reduced-motion'];
+const panelMotionConfig = {
+  calm: { ease: 'power2.out', frameY: 42, parallax: -4, scrub: 1.2, wordShiftY: -5, wordShiftX: 0 },
+  expressive: { ease: 'power3.out', frameY: 56, parallax: -8, scrub: 0.9, wordShiftY: -10, wordShiftX: 2.5 },
+  final: { frameY: 28, parallax: -3, scrub: 1.05, wordShiftY: -5, wordShiftX: 0 }
+};
+
+function prefersReducedMotion() {
+  return motionPreference.matches;
+}
+
+function hasFinePointer() {
+  return finePointerQuery.matches;
+}
+
+function setBackgroundState(nextState) {
+  dom.body.classList.remove(...backgroundStateClasses);
+
+  if (nextState) {
+    dom.body.classList.add(nextState);
+  }
+}
 
 function splitHeadingLines() {
   document.querySelectorAll('.motion-heading').forEach((heading) => {
@@ -22,129 +53,150 @@ function splitHeadingLines() {
     }
 
     const text = heading.textContent.trim();
-    if (!text) return;
+    if (!text) {
+      return;
+    }
 
-    const wordsList = text.split(/\s+/);
-    heading.innerHTML = wordsList
+    heading.innerHTML = text
+      .split(/\s+/)
       .map((word) => `<span class="heading-line"><span>${word}</span></span>`)
       .join(' ');
   });
 }
 
-splitHeadingLines();
-
-function initCursorSystem() {
-  if (!dot || !ring || !orb) return;
-
-  window.addEventListener('mousemove', (event) => {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-
-    dot.style.left = `${mouseX}px`;
-    dot.style.top = `${mouseY}px`;
+function revealStaticMotionState() {
+  document.querySelectorAll('.motion-word, .motion-fade, .heading-line > span, .motion-heading-single').forEach((element) => {
+    element.style.opacity = '1';
+    element.style.transform = 'none';
   });
+}
 
-  function animateCursor() {
-    ringX += (mouseX - ringX) * 0.16;
-    ringY += (mouseY - ringY) * 0.16;
+function getPanelParts(panel) {
+  return {
+    frame: panel.querySelector('.frame'),
+    note: panel.querySelector('.motion-fade'),
+    words: panel.querySelectorAll('.motion-word'),
+    lines: panel.querySelectorAll('.heading-line > span'),
+    singleHeading: panel.querySelector('.motion-heading-single')
+  };
+}
 
-    orbX += (mouseX - orbX) * 0.08;
-    orbY += (mouseY - orbY) * 0.08;
+function getPanelConfig(panel) {
+  const toneKey = panel.dataset.tone === 'expressive' ? 'expressive' : 'calm';
+  const baseConfig = panelMotionConfig[toneKey];
 
-    ring.style.left = `${ringX}px`;
-    ring.style.top = `${ringY}px`;
-    orb.style.left = `${orbX}px`;
-    orb.style.top = `${orbY}px`;
-
-    orbEnergy += (0 - orbEnergy) * 0.06;
-
-    requestAnimationFrame(animateCursor);
+  if (panel.querySelector('.frame-grid-final')) {
+    return { ...baseConfig, ...panelMotionConfig.final };
   }
 
-  animateCursor();
-
-  words.forEach((element) => {
-    element.addEventListener('mouseenter', () => {
-      ring.classList.add('active');
-      const tone = element.getAttribute('data-color') || '#ff8a4c';
-      document.documentElement.style.setProperty('--orb-color', tone);
-      orbEnergy = 1;
-
-      if (window.gsap) {
-        gsap.to(orb, { opacity: 0.42, scale: 1.18, duration: 0.45, ease: 'power3.out' });
-        gsap.to(element, {
-          duration: 0.45,
-          ease: 'power3.out',
-          y: -8,
-          textShadow: `0 0 26px ${tone}`
-        });
-      }
-    });
-
-    element.addEventListener('mouseleave', () => {
-      ring.classList.remove('active');
-      orbEnergy = 0.45;
-
-      if (window.gsap) {
-        gsap.to(orb, { opacity: 0.24, scale: 1, duration: 0.5, ease: 'power2.out' });
-        gsap.to(element, { duration: 0.4, y: 0, textShadow: '0 0 0 transparent', ease: 'power2.out' });
-      }
-    });
-  });
+  return baseConfig;
 }
 
-if (!prefersReducedMotion) {
-  initCursorSystem();
-}
-
-function initGsapMotion() {
-  if (!window.gsap || !window.ScrollTrigger || prefersReducedMotion) {
-    document.querySelectorAll('.motion-word, .motion-fade, .heading-line > span').forEach((el) => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
-    document.querySelectorAll('.motion-heading-single').forEach((el) => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
+function initCursorSystem() {
+  if (prefersReducedMotion() || !hasFinePointer() || !dom.dot || !dom.ring || !dom.orb) {
     return;
   }
 
+  const updatePointerPosition = (event) => {
+    interaction.mouseX = event.clientX;
+    interaction.mouseY = event.clientY;
+
+    dom.dot.style.left = `${interaction.mouseX}px`;
+    dom.dot.style.top = `${interaction.mouseY}px`;
+  };
+
+  const animateCursor = () => {
+    interaction.ringX += (interaction.mouseX - interaction.ringX) * 0.16;
+    interaction.ringY += (interaction.mouseY - interaction.ringY) * 0.16;
+    interaction.orbX += (interaction.mouseX - interaction.orbX) * 0.08;
+    interaction.orbY += (interaction.mouseY - interaction.orbY) * 0.08;
+
+    dom.ring.style.left = `${interaction.ringX}px`;
+    dom.ring.style.top = `${interaction.ringY}px`;
+    dom.orb.style.left = `${interaction.orbX}px`;
+    dom.orb.style.top = `${interaction.orbY}px`;
+
+    interaction.orbEnergy += (0 - interaction.orbEnergy) * 0.06;
+
+    requestAnimationFrame(animateCursor);
+  };
+
+  const setWordHoverState = (element, isActive) => {
+    const tone = element.getAttribute('data-color') || '#ff8a4c';
+
+    document.documentElement.style.setProperty('--orb-color', tone);
+    interaction.orbEnergy = isActive ? 1 : 0.45;
+    dom.ring.classList.toggle('active', isActive);
+
+    if (!window.gsap) {
+      return;
+    }
+
+    window.gsap.to(dom.orb, {
+      opacity: isActive ? 0.42 : 0.24,
+      scale: isActive ? 1.18 : 1,
+      duration: isActive ? 0.45 : 0.5,
+      ease: isActive ? 'power3.out' : 'power2.out'
+    });
+
+    window.gsap.to(element, {
+      duration: isActive ? 0.45 : 0.4,
+      ease: isActive ? 'power3.out' : 'power2.out',
+      y: isActive ? -8 : 0,
+      textShadow: isActive ? `0 0 26px ${tone}` : '0 0 0 transparent'
+    });
+  };
+
+  window.addEventListener('pointermove', updatePointerPosition, { passive: true });
+
+  dom.words.forEach((element) => {
+    element.addEventListener('mouseenter', () => setWordHoverState(element, true));
+    element.addEventListener('mouseleave', () => setWordHoverState(element, false));
+  });
+
+  animateCursor();
+}
+
+function initGsapMotion() {
+  if (!window.gsap || !window.ScrollTrigger || prefersReducedMotion()) {
+    revealStaticMotionState();
+    return;
+  }
+
+  const { gsap, ScrollTrigger } = window;
+
   gsap.registerPlugin(ScrollTrigger);
 
-  const initialPanel = panels[0];
+  const initialPanel = dom.panels[0];
   if (initialPanel) {
-    const initialLines = initialPanel.querySelectorAll('.heading-line > span');
-    const initialSingleHeading = initialPanel.querySelector('.motion-heading-single');
-    const initialNote = initialPanel.querySelector('.motion-fade');
-    const initialWords = initialPanel.querySelectorAll('.motion-word');
-    const initialTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    const { lines, singleHeading, note, words } = getPanelParts(initialPanel);
+    const introTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    if (initialLines.length) {
-      initialTimeline.to(initialLines, {
+    if (lines.length) {
+      introTimeline.to(lines, {
         yPercent: 0,
         opacity: 1,
         duration: 1,
         stagger: 0.08
       });
-    } else if (initialSingleHeading) {
-      initialTimeline.to(initialSingleHeading, {
+    } else if (singleHeading) {
+      introTimeline.to(singleHeading, {
         y: 0,
         opacity: 1,
         duration: 1
       });
     }
 
-    if (initialNote) {
-      initialTimeline.to(initialNote, {
+    if (note) {
+      introTimeline.to(note, {
         y: 0,
         opacity: 1,
         duration: 0.9
       }, '-=0.7');
     }
 
-    if (initialWords.length) {
-      initialTimeline.to(initialWords, {
+    if (words.length) {
+      introTimeline.to(words, {
         y: 0,
         opacity: 1,
         duration: 0.95,
@@ -153,23 +205,13 @@ function initGsapMotion() {
     }
   }
 
-  const sectionSettings = [
-    { tone: 'calm', frameY: 42, wordY: 24, parallax: -4, scrub: 1.2 },
-    { tone: 'expressive', frameY: 56, wordY: 34, parallax: -8, scrub: 0.9 },
-    { tone: 'expressive', frameY: 28, wordY: 14, parallax: -3, scrub: 1.05 }
-  ];
+  dom.panels.forEach((panel, index) => {
+    const { frame, note, words, lines, singleHeading } = getPanelParts(panel);
+    const config = getPanelConfig(panel);
 
-  panels.forEach((panel, index) => {
-    const frame = panel.querySelector('.frame');
-    const note = panel.querySelector('.motion-fade');
-    const panelWords = panel.querySelectorAll('.motion-word');
-    const lines = panel.querySelectorAll('.heading-line > span');
-    const singleHeading = panel.querySelector('.motion-heading-single');
-    const cfg = sectionSettings[index] || sectionSettings[0];
-
-    if (index > 0) {
-      const tl = gsap.timeline({
-        defaults: { ease: cfg.tone === 'expressive' ? 'power3.out' : 'power2.out' },
+    if (index > 0 && frame) {
+      const entranceTimeline = gsap.timeline({
+        defaults: { ease: config.ease },
         scrollTrigger: {
           trigger: panel,
           start: 'top 74%',
@@ -177,22 +219,21 @@ function initGsapMotion() {
         }
       });
 
-      tl.fromTo(frame,
-        { y: cfg.frameY, opacity: 0, scale: cfg.tone === 'expressive' ? 0.985 : 1 },
-        { y: 0, opacity: 1, scale: 1, duration: cfg.tone === 'expressive' ? 1.05 : 1.25 }
+      entranceTimeline.fromTo(
+        frame,
+        { y: config.frameY, opacity: 0, scale: config.ease === 'power3.out' ? 0.985 : 1 },
+        { y: 0, opacity: 1, scale: 1, duration: config.ease === 'power3.out' ? 1.05 : 1.25 }
       );
 
       if (lines.length) {
-        tl.to(lines, {
+        entranceTimeline.to(lines, {
           yPercent: 0,
           opacity: 1,
           duration: 0.8,
           stagger: 0.06
         }, '-=0.72');
-      }
-
-      if (!lines.length && singleHeading) {
-        tl.to(singleHeading, {
+      } else if (singleHeading) {
+        entranceTimeline.to(singleHeading, {
           y: 0,
           opacity: 1,
           duration: 0.9
@@ -200,71 +241,84 @@ function initGsapMotion() {
       }
 
       if (note) {
-        tl.to(note, { y: 0, opacity: 1, duration: 0.8 }, '-=0.62');
+        entranceTimeline.to(note, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8
+        }, '-=0.62');
       }
 
-      if (panelWords.length) {
-        tl.to(panelWords, { y: 0, opacity: 1, duration: 0.9, stagger: 0.08 }, '-=0.58');
+      if (words.length) {
+        entranceTimeline.to(words, {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.08
+        }, '-=0.58');
       }
     }
 
     if (frame) {
       gsap.to(frame, {
-        yPercent: cfg.parallax,
+        yPercent: config.parallax,
         ease: 'none',
         scrollTrigger: {
           trigger: panel,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: cfg.scrub
+          scrub: config.scrub
         }
       });
     }
 
-    if (panelWords.length) {
-      gsap.to(panelWords, {
-        yPercent: cfg.tone === 'expressive' ? -10 : -5,
-        xPercent: cfg.tone === 'expressive' ? 2.5 : 0,
+    if (words.length) {
+      gsap.to(words, {
+        yPercent: config.wordShiftY,
+        xPercent: config.wordShiftX,
         ease: 'none',
         scrollTrigger: {
           trigger: panel,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: cfg.scrub + 0.25
+          scrub: config.scrub + 0.25
         }
       });
     }
   });
 
-  gsap.to('.liquid-overlay', {
-    opacity: 0.82,
-    scrollTrigger: {
-      trigger: 'main',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 1.4
-    }
-  });
+  if (dom.liquidOverlay) {
+    gsap.to(dom.liquidOverlay, {
+      opacity: 0.82,
+      scrollTrigger: {
+        trigger: dom.panels.length ? 'main' : document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.4
+      }
+    });
+  }
 
   ScrollTrigger.refresh();
 }
 
-initGsapMotion();
-
 let webglInitialized = false;
 
 function initWebGLBackground() {
-  if (webglInitialized) return;
+  if (webglInitialized || !dom.canvas) {
+    return;
+  }
+
   webglInitialized = true;
 
-  const canvas = document.querySelector('.webgl-bg');
-  const gl = canvas?.getContext('webgl', {
+  const gl = dom.canvas.getContext('webgl', {
     antialias: false,
     alpha: false,
     powerPreference: 'high-performance'
   });
 
-  if (!gl) return;
+  if (!gl) {
+    return;
+  }
 
   const vertexShaderSource = `
     attribute vec2 a_position;
@@ -302,11 +356,13 @@ function initWebGLBackground() {
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
+
       for (int i = 0; i < 5; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
       }
+
       return v;
     }
 
@@ -339,7 +395,9 @@ function initWebGLBackground() {
 
   function compileShader(type, source) {
     const shader = gl.createShader(type);
-    if (!shader) return null;
+    if (!shader) {
+      return null;
+    }
 
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -356,16 +414,22 @@ function initWebGLBackground() {
   const vertexShader = compileShader(gl.VERTEX_SHADER, vertexShaderSource);
   const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-  if (!vertexShader || !fragmentShader) return;
+  if (!vertexShader || !fragmentShader) {
+    return;
+  }
 
   const program = gl.createProgram();
-  if (!program) return;
+  if (!program) {
+    return;
+  }
 
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
 
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    return;
+  }
 
   gl.useProgram(program);
 
@@ -394,40 +458,56 @@ function initWebGLBackground() {
   const scrollLocation = gl.getUniformLocation(program, 'u_scroll');
   const energyLocation = gl.getUniformLocation(program, 'u_energy');
 
-  function resize() {
+  let needsResize = true;
+
+  const markForResize = () => {
+    needsResize = true;
+  };
+
+  const resizeCanvas = () => {
+    if (!needsResize) {
+      return;
+    }
+
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const width = Math.floor(window.innerWidth * dpr);
     const height = Math.floor(window.innerHeight * dpr);
 
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
+    if (dom.canvas.width !== width || dom.canvas.height !== height) {
+      dom.canvas.width = width;
+      dom.canvas.height = height;
       gl.viewport(0, 0, width, height);
     }
-  }
 
-  window.addEventListener('resize', resize);
-  resize();
+    needsResize = false;
+  };
 
-  const start = performance.now();
+  window.addEventListener('resize', markForResize, { passive: true });
+  resizeCanvas();
+
+  const startTime = performance.now();
 
   function drawFrame(now) {
-    resize();
+    if (document.hidden) {
+      requestAnimationFrame(drawFrame);
+      return;
+    }
 
-    const elapsed = prefersReducedMotion ? 0 : (now - start) * 0.001;
-    const doc = document.documentElement;
-    const scrollMax = Math.max(doc.scrollHeight - window.innerHeight, 1);
-    const scrollNorm = window.scrollY / scrollMax;
+    resizeCanvas();
 
-    gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+    const elapsed = prefersReducedMotion() ? 0 : (now - startTime) * 0.001;
+    const scrollMax = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const scrollProgress = window.scrollY / scrollMax;
+
+    gl.uniform2f(resolutionLocation, dom.canvas.width, dom.canvas.height);
     gl.uniform1f(timeLocation, elapsed);
     gl.uniform2f(
       mouseLocation,
-      mouseX * (canvas.width / window.innerWidth),
-      mouseY * (canvas.height / window.innerHeight)
+      interaction.mouseX * (dom.canvas.width / window.innerWidth),
+      interaction.mouseY * (dom.canvas.height / window.innerHeight)
     );
-    gl.uniform1f(scrollLocation, scrollNorm);
-    gl.uniform1f(energyLocation, orbEnergy);
+    gl.uniform1f(scrollLocation, scrollProgress);
+    gl.uniform1f(energyLocation, interaction.orbEnergy);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(drawFrame);
@@ -437,82 +517,71 @@ function initWebGLBackground() {
 }
 
 function initVideoBackground() {
+  const { liquidVideo } = dom;
+
   if (!liquidVideo) {
-    document.body.classList.add('no-video');
+    setBackgroundState('no-video');
     initWebGLBackground();
     return;
   }
 
-  liquidVideo.muted = true;
-  liquidVideo.playsInline = true;
-  liquidVideo.defaultMuted = true;
-  liquidVideo.setAttribute('muted', '');
-  liquidVideo.setAttribute('playsinline', '');
-
-  let fallbackActivated = false;
-  let videoActivated = false;
-
-  const clearVideoState = () => {
-    document.body.classList.remove('has-video', 'no-video');
-  };
-
-  const activateFallback = () => {
-    if (fallbackActivated || videoActivated) return;
-    fallbackActivated = true;
-    clearVideoState();
-    document.body.classList.add('no-video');
-    initWebGLBackground();
-  };
-
-  const activateVideo = () => {
-    if (videoActivated || fallbackActivated) return;
-    videoActivated = true;
-    clearVideoState();
-    document.body.classList.add('has-video');
-  };
-
-  const tryPlay = () => {
-    const playPromise = liquidVideo.play();
-
-    if (playPromise && typeof playPromise.then === 'function') {
-      playPromise.then(() => {
-        if (liquidVideo.readyState >= 2 && !liquidVideo.paused) {
-          activateVideo();
-        }
-      }).catch(() => {});
-      return;
-    }
-
-    if (liquidVideo.readyState >= 2) {
-      activateVideo();
-    }
-  };
-
-  liquidVideo.addEventListener('error', activateFallback, { once: true });
-  liquidVideo.addEventListener('playing', activateVideo, { once: true });
-  liquidVideo.addEventListener('canplay', tryPlay, { once: true });
-  liquidVideo.addEventListener('loadeddata', tryPlay, { once: true });
-
-  if (prefersReducedMotion) {
-    activateVideo();
+  if (prefersReducedMotion()) {
+    setBackgroundState('reduced-motion');
     liquidVideo.pause();
     return;
   }
 
-  const fallbackTimer = window.setTimeout(() => {
-    if (!videoActivated) {
-      activateFallback();
+  liquidVideo.muted = true;
+  liquidVideo.defaultMuted = true;
+  liquidVideo.playsInline = true;
+  liquidVideo.setAttribute('muted', '');
+  liquidVideo.setAttribute('playsinline', '');
+
+  let settled = false;
+
+  const settleVideoState = (state, onSettle) => {
+    if (settled) {
+      return;
     }
+
+    settled = true;
+    setBackgroundState(state);
+
+    if (typeof onSettle === 'function') {
+      onSettle();
+    }
+  };
+
+  const requestPlayback = () => {
+    const playPromise = liquidVideo.play();
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
+  };
+
+  const fallbackTimer = window.setTimeout(() => {
+    settleVideoState('no-video', initWebGLBackground);
   }, 4000);
 
   const clearFallbackTimer = () => {
     window.clearTimeout(fallbackTimer);
   };
 
-  liquidVideo.addEventListener('playing', clearFallbackTimer, { once: true });
-  liquidVideo.addEventListener('error', clearFallbackTimer, { once: true });
+  liquidVideo.addEventListener('playing', () => {
+    clearFallbackTimer();
+    settleVideoState('has-video');
+  }, { once: true });
 
-  tryPlay();
+  liquidVideo.addEventListener('error', () => {
+    clearFallbackTimer();
+    settleVideoState('no-video', initWebGLBackground);
+  }, { once: true });
+
+  liquidVideo.addEventListener('canplay', requestPlayback, { once: true });
+  liquidVideo.addEventListener('loadeddata', requestPlayback, { once: true });
+
+  requestPlayback();
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -520,14 +589,13 @@ function initVideoBackground() {
       return;
     }
 
-    if (prefersReducedMotion || fallbackActivated) return;
-
-    liquidVideo.play().catch(() => {
-      if (!videoActivated) {
-        activateFallback();
-      }
-    });
+    if (!settled || dom.body.classList.contains('has-video')) {
+      requestPlayback();
+    }
   });
 }
 
+splitHeadingLines();
+initCursorSystem();
+initGsapMotion();
 initVideoBackground();
