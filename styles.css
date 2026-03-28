@@ -433,6 +433,76 @@ body.page-kto .kto-action:focus-visible {
   color: #ffffff;
 }
 
+body.page-find {
+  --ink: #111111;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body.page-find .background-media {
+  background: var(--bg);
+}
+
+body.page-find .liquid-poster,
+body.page-find .webgl-bg {
+  display: none;
+}
+
+body.page-find .liquid-bg {
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: saturate(1.08) contrast(1.06) brightness(1.02);
+}
+
+body.page-find.has-video .liquid-bg {
+  opacity: 0.96;
+}
+
+body.page-find .liquid-overlay {
+  background: none;
+}
+
+body.page-find .noise {
+  opacity: 0;
+}
+
+body.page-find .frame-note,
+body.page-find .frame-note-link,
+body.page-find .subpage-note,
+body.page-find .subpage-link,
+body.page-find .subpage-title,
+body.page-find h1,
+body.page-find h2,
+body.page-find p {
+  color: #111111;
+}
+
+body.page-find .frame-note-link:hover,
+body.page-find .frame-note-link:focus-visible,
+body.page-find .subpage-link:hover,
+body.page-find .subpage-link:focus-visible,
+body.page-find .subpage-link.is-active {
+  color: #111111;
+}
+
+body.page-find .subpage-link {
+  color: rgba(17, 17, 17, 0.36);
+}
+
+body.page-find .cursor-dot {
+  background: #111111;
+  box-shadow: 0 0 18px rgba(17, 17, 17, 0.18);
+}
+
+body.page-find .cursor-ring {
+  border-color: rgba(17, 17, 17, 0.42);
+}
+
+body.page-find .cursor-ring.active {
+  border-color: rgba(17, 17, 17, 0.62);
+  background-color: rgba(17, 17, 17, 0.05);
+}
+
 @media (max-width: 1100px) {
   .frame-kto-composition {
     grid-template-columns: 1fr 1fr;
