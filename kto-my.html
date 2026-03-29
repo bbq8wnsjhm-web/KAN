@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Кто мы — Pulse Atelier</title>
   <meta name="description" content="Страница Кто мы" />
-  <link rel="stylesheet" href="styles.css?v=20260329-dark5" />
+  <link rel="preload" as="image" href="media/kto-bg-poster.jpg?v=20260329-ktocubet1" />
+  <link rel="stylesheet" href="styles.css?v=20260329-ktofallback1" />
 </head>
 <body class="page-kto">
   <div class="background-media" aria-hidden="true">
-    <video class="liquid-bg scene-video" autoplay muted loop playsinline preload="auto" tabindex="-1">
-      <source src="media/kto-bg.mp4?v=20260329-kto4" type="video/mp4" />
+    <video class="liquid-bg scene-video" autoplay muted loop playsinline preload="metadata" poster="media/kto-bg-poster.jpg?v=20260329-ktocubet1" tabindex="-1">
+      <source src="media/kto-bg.mp4?v=20260329-ktocubet1" type="video/mp4" />
     </video>
-    <div class="liquid-poster" aria-hidden="true"></div>
+    <div class="liquid-poster" aria-hidden="true" style="background-image: url('media/kto-bg-poster.jpg?v=20260329-ktocubet1');"></div>
     <div class="liquid-overlay"></div>
     <div class="noise"></div>
   </div>
@@ -73,6 +74,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="script.js?v=20260329-site1"></script>
+  <script src="script.js?v=20260329-ktofallback1"></script>
 </body>
 </html>
