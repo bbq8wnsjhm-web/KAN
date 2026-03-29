@@ -9,7 +9,7 @@
 | Главная | `index.html` | `media/main-bg.mp4`, `media/main-bg-poster.jpg` |
 | Кто мы | `kto-my.html` | `media/kto-bg.mp4`, `media/kto-bg-poster.jpg` |
 | Что мы делаем | `chto-my-delaem.html` | `media/what-bg.mp4`, `media/what-bg-poster.jpg` |
-| Как найти | `kak-naiti.html` | `media/find-bg.mp4` |
+| Как найти | `kak-naiti.html` | `media/find-bg.mp4`, `media/find-bg-poster.jpg` |
 
 ## Live-шрифты
 

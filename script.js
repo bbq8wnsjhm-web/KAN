@@ -119,7 +119,7 @@ function revealStaticMotionState() {
 function getPanelParts(panel) {
   return {
     frame: panel.querySelector('.frame'),
-    note: panel.querySelector('.motion-fade'),
+    notes: panel.querySelectorAll('.motion-fade'),
     words: panel.querySelectorAll('.motion-word'),
     lines: panel.querySelectorAll('.heading-line > span'),
     singleHeading: panel.querySelector('.motion-heading-single')
@@ -214,7 +214,7 @@ function initGsapMotion() {
 
   const initialPanel = dom.panels[0];
   if (initialPanel) {
-    const { lines, singleHeading, note, words } = getPanelParts(initialPanel);
+    const { lines, singleHeading, notes, words } = getPanelParts(initialPanel);
     const introTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     if (lines.length) {
@@ -232,11 +232,12 @@ function initGsapMotion() {
       });
     }
 
-    if (note) {
-      introTimeline.to(note, {
+    if (notes.length) {
+      introTimeline.to(notes, {
         y: 0,
         opacity: 1,
-        duration: 0.9
+        duration: 0.9,
+        stagger: 0.06
       }, '-=0.7');
     }
 
@@ -251,7 +252,7 @@ function initGsapMotion() {
   }
 
   dom.panels.forEach((panel, index) => {
-    const { frame, note, words, lines, singleHeading } = getPanelParts(panel);
+    const { frame, notes, words, lines, singleHeading } = getPanelParts(panel);
     const config = getPanelConfig(panel);
 
     if (index > 0 && frame) {
@@ -285,11 +286,12 @@ function initGsapMotion() {
         }, '-=0.72');
       }
 
-      if (note) {
-        entranceTimeline.to(note, {
+      if (notes.length) {
+        entranceTimeline.to(notes, {
           y: 0,
           opacity: 1,
-          duration: 0.8
+          duration: 0.8,
+          stagger: 0.06
         }, '-=0.62');
       }
 
@@ -641,7 +643,7 @@ function initVideoBackground() {
 }
 
 splitHeadingLines();
+initVideoBackground();
 initSceneVideos();
 initCursorSystem();
 initGsapMotion();
-initVideoBackground();

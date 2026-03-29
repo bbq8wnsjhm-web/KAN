@@ -11,6 +11,7 @@
 - `docs/design-rules.md` — визуальные и интерактивные правила, включая ориентир на `monopo.london`.
 - `docs/layout-rules.md` — строгие правила сетки, композиции, иерархии текста и responsive-верстки.
 - `docs/workflow.md` — правила раскладки материалов и рабочий процесс.
+- `tools/convert-mov-to-mp4.ps1` — локальная конвертация мастер-роликов `.mov` в web-версию `.mp4`.
 - `tools/start-preview.ps1` — локальный запуск сайта через Python.
 - `.editorconfig` — единая кодировка UTF-8 и базовые правила для текстовых файлов.
 - `.gitignore` — игнорирование служебных логов и резервных данных из `моушнсайт`.
@@ -24,6 +25,16 @@ powershell -ExecutionPolicy Bypass -File .\tools\start-preview.ps1
 ```
 
 После запуска сайт будет доступен по адресу `http://localhost:8000`.
+
+## Конвертация видео
+
+Для подготовки web-версии из `.mov`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\convert-mov-to-mp4.ps1 -InputPath ".\моушнсайт\анимация\сцена.mov"
+```
+
+Скрипт использует локально установленный `FFmpeg Essentials`, делает `mp4` на `libx264`, добавляет `+faststart` и по умолчанию убирает аудио, что удобно для фоновых сцен сайта.
 
 ## Короткое правило работы
 
