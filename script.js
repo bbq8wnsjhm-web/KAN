@@ -8,6 +8,7 @@ const dom = {
   orb: document.querySelector('.color-orb'),
   words: Array.from(document.querySelectorAll('.motion-word')),
   panels: Array.from(document.querySelectorAll('.panel')),
+  videos: Array.from(document.querySelectorAll('video')),
   liquidVideo: document.querySelector('.liquid-bg'),
   liquidOverlay: document.querySelector('.liquid-overlay'),
   canvas: document.querySelector('.webgl-bg')
@@ -44,6 +45,50 @@ function setBackgroundState(nextState) {
   if (nextState) {
     dom.body.classList.add(nextState);
   }
+}
+
+function initSceneVideos() {
+  if (!dom.videos.length) {
+    return;
+  }
+
+  const safePlay = (video) => {
+    const playPromise = video.play();
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
+  };
+
+  dom.videos.forEach((video) => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('playsinline', '');
+
+    if (prefersReducedMotion()) {
+      video.pause();
+      return;
+    }
+
+    video.addEventListener('canplay', () => safePlay(video), { once: true });
+    video.addEventListener('loadeddata', () => safePlay(video), { once: true });
+    safePlay(video);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    dom.videos.forEach((video) => {
+      if (document.hidden || prefersReducedMotion()) {
+        video.pause();
+        return;
+      }
+
+      safePlay(video);
+    });
+  });
 }
 
 function splitHeadingLines() {
@@ -596,6 +641,7 @@ function initVideoBackground() {
 }
 
 splitHeadingLines();
+initSceneVideos();
 initCursorSystem();
 initGsapMotion();
 initVideoBackground();

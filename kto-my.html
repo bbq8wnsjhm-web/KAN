@@ -5,19 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Кто мы — Pulse Atelier</title>
   <meta name="description" content="Страница Кто мы" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="media/kto-bg-poster.jpg?v=20260329-kto4" />
-  <link rel="stylesheet" href="styles.css?v=20260329-kto4" />
+  <link rel="stylesheet" href="styles.css?v=20260329-dark5" />
 </head>
 <body class="page-kto">
-  <div class="background-media background-media-kto" aria-hidden="true">
-    <div class="kto-orb-stage">
-      <video class="kto-orb-video" autoplay muted loop playsinline preload="auto" poster="media/kto-bg-poster.jpg?v=20260329-kto4" tabindex="-1">
-        <source src="media/kto-bg.mov?v=20260329-kto4" type="video/quicktime" />
-      </video>
-    </div>
+  <div class="background-media" aria-hidden="true">
+    <video class="liquid-bg scene-video" autoplay muted loop playsinline preload="auto" tabindex="-1">
+      <source src="media/kto-bg.mp4?v=20260329-kto4" type="video/mp4" />
+    </video>
+    <div class="liquid-poster" aria-hidden="true"></div>
+    <div class="liquid-overlay"></div>
     <div class="noise"></div>
   </div>
   <div class="color-orb" aria-hidden="true"></div>
@@ -31,7 +27,7 @@
 
         <header class="kto-copy kto-copy-primary">
           <h1 class="kto-title motion-heading-single">КТО МЫ?</h1>
-          <p class="kto-lead motion-fade">влюбленные в свою работу.</p>
+          <p class="kto-lead motion-fade">влюблённые в свою работу.</p>
         </header>
 
         <div class="kto-copy kto-copy-left motion-fade">
@@ -77,6 +73,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="script.js?v=20260329-kto4"></script>
+  <script src="script.js?v=20260329-site1"></script>
 </body>
 </html>
