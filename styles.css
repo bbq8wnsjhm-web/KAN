@@ -567,6 +567,7 @@ h2 {
 }
 
 .home-hero-footnote-struck {
+  font-size: clamp(1.13rem, 1.32vw, 1.25rem);
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
   text-decoration-color: rgba(228, 225, 219, 0.82);
@@ -609,7 +610,7 @@ h2 {
   align-self: start;
   margin: 0;
   max-width: 11ch;
-  font-size: clamp(2.15rem, 4vw, 3.85rem);
+  font-size: clamp(1.83rem, 3.4vw, 3.27rem);
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.05em;
@@ -726,8 +727,10 @@ h2 {
   align-self: end;
   justify-self: start;
   display: inline-flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0;
+  min-width: 3.4rem;
   width: fit-content;
   padding: 0.9rem 1.18rem;
   border-radius: 999px;
@@ -926,6 +929,10 @@ h2 {
   text-transform: none;
 }
 
+.footer-link-lowercase {
+  text-transform: none;
+}
+
 .page-home .footer-link-subtle {
   font-size: clamp(1.08rem, 1.5vw, 1.56rem);
 }
@@ -938,7 +945,7 @@ h2 {
   box-shadow:
     0 22px 52px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  color: #ada89f;
+  color: #24262b;
 }
 
 .page-home .footer-link-light-glass::before {
@@ -957,7 +964,7 @@ h2 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.12) 100%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.06) 100%);
   border-color: rgba(255, 255, 255, 0.3);
-  color: #ada89f;
+  color: #1d1f24;
 }
 
 .color-orb {
@@ -1378,6 +1385,15 @@ body.page-kto .kto-action:focus-visible {
   color: var(--ink);
 }
 
+body.page-kto .kto-action-graphite {
+  color: #24262b;
+}
+
+body.page-kto .kto-action-graphite:hover,
+body.page-kto .kto-action-graphite:focus-visible {
+  color: #1d1f24;
+}
+
 .kto-editorial-frame {
   min-height: calc(100svh - 2rem);
   display: grid;
@@ -1443,6 +1459,7 @@ body.page-kto .kto-action:focus-visible {
   margin: 0;
   max-width: 22rem;
   font-size: clamp(1rem, 1.34vw, 1.24rem);
+  font-weight: 600;
   line-height: 1.14;
   color: rgba(173, 168, 159, 0.92);
 }
@@ -1994,7 +2011,7 @@ body.page-what p {
 
   .home-friday {
     max-width: 10ch;
-    font-size: clamp(1.9rem, 5.8vw, 2.95rem);
+    font-size: clamp(1.62rem, 4.93vw, 2.51rem);
   }
 
   .home-signal-stack {
@@ -2284,7 +2301,7 @@ body.page-what p {
   }
 
   .home-friday {
-    font-size: clamp(1.7rem, 8vw, 2.4rem);
+    font-size: clamp(1.45rem, 6.8vw, 2.04rem);
   }
 
   .home-signal,

@@ -17,7 +17,8 @@ const dom = {
   homeSignals: Array.from(document.querySelectorAll('.home-signal')),
   signalOutput: document.querySelector('[data-signal-output]'),
   homeVerbChips: Array.from(document.querySelectorAll('.home-verb-chip')),
-  verbOutput: document.querySelector('[data-verb-output]')
+  verbOutput: document.querySelector('[data-verb-output]'),
+  backgroundAudio: document.querySelector('.site-audio')
 };
 
 const interaction = {
@@ -31,6 +32,7 @@ const interaction = {
 };
 
 const backgroundStateClasses = ['has-video', 'no-video', 'reduced-motion'];
+const audioSessionStateKey = 'pulse-atelier-audio-state';
 const panelMotionConfig = {
   calm: { ease: 'power2.out', frameY: 42, parallax: -4, scrub: 1.2, wordShiftY: -5, wordShiftX: 0 },
   expressive: { ease: 'power3.out', frameY: 56, parallax: -8, scrub: 0.9, wordShiftY: -10, wordShiftX: 2.5 },
@@ -145,6 +147,98 @@ function getPanelConfig(panel) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function readAudioSessionState() {
+  try {
+    return JSON.parse(window.sessionStorage.getItem(audioSessionStateKey) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function writeAudioSessionState(nextState) {
+  try {
+    window.sessionStorage.setItem(audioSessionStateKey, JSON.stringify(nextState));
+  } catch {}
+}
+
+function initBackgroundAudio() {
+  const audio = dom.backgroundAudio;
+
+  if (!audio) {
+    return;
+  }
+
+  const storedState = readAudioSessionState();
+  const requestedVolume = Number.parseFloat(audio.dataset.volume || '0.08');
+  const targetVolume = Number.isFinite(requestedVolume) ? clamp(requestedVolume, 0, 1) : 0.08;
+  const interactionEvents = ['pointerdown', 'touchstart', 'keydown', 'wheel'];
+
+  audio.volume = targetVolume;
+  audio.loop = true;
+
+  const persistAudioState = () => {
+    writeAudioSessionState({
+      time: Number.isFinite(audio.currentTime) ? audio.currentTime : 0,
+      shouldPlay: !audio.paused
+    });
+  };
+
+  const restorePlaybackPosition = () => {
+    const savedTime = Number.parseFloat(storedState.time);
+
+    if (!Number.isFinite(savedTime) || savedTime <= 0) {
+      return;
+    }
+
+    try {
+      audio.currentTime = savedTime;
+    } catch {}
+  };
+
+  const removeInteractionListeners = () => {
+    interactionEvents.forEach((eventName) => {
+      window.removeEventListener(eventName, resumeAudioPlayback);
+    });
+  };
+
+  function resumeAudioPlayback() {
+    const playPromise = audio.play();
+
+    if (!playPromise || typeof playPromise.then !== 'function') {
+      removeInteractionListeners();
+      persistAudioState();
+      return;
+    }
+
+    playPromise
+      .then(() => {
+        removeInteractionListeners();
+        persistAudioState();
+      })
+      .catch(() => {});
+  }
+
+  const addInteractionListeners = () => {
+    interactionEvents.forEach((eventName) => {
+      window.addEventListener(eventName, resumeAudioPlayback, { passive: true });
+    });
+  };
+
+  if (audio.readyState >= 1) {
+    restorePlaybackPosition();
+  } else {
+    audio.addEventListener('loadedmetadata', restorePlaybackPosition, { once: true });
+  }
+
+  audio.addEventListener('playing', persistAudioState);
+  audio.addEventListener('pause', persistAudioState);
+  audio.addEventListener('timeupdate', persistAudioState);
+  window.addEventListener('pagehide', persistAudioState);
+
+  addInteractionListeners();
+  resumeAudioPlayback();
 }
 
 function bindInteractiveCopy(items, output, container, colorVariableName) {
@@ -758,6 +852,7 @@ function initVideoBackground() {
 }
 
 splitHeadingLines();
+initBackgroundAudio();
 initVideoBackground();
 initSceneVideos();
 initCursorSystem();
