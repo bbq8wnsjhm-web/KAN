@@ -11,7 +11,13 @@ const dom = {
   videos: Array.from(document.querySelectorAll('video')),
   liquidVideo: document.querySelector('.liquid-bg'),
   liquidOverlay: document.querySelector('.liquid-overlay'),
-  canvas: document.querySelector('.webgl-bg')
+  canvas: document.querySelector('.webgl-bg'),
+  homeHeroFrame: document.querySelector('.home-hero-frame'),
+  homeShowcaseFrame: document.querySelector('.home-showcase-frame'),
+  homeSignals: Array.from(document.querySelectorAll('.home-signal')),
+  signalOutput: document.querySelector('[data-signal-output]'),
+  homeVerbChips: Array.from(document.querySelectorAll('.home-verb-chip')),
+  verbOutput: document.querySelector('[data-verb-output]')
 };
 
 const interaction = {
@@ -135,6 +141,115 @@ function getPanelConfig(panel) {
   }
 
   return baseConfig;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function bindInteractiveCopy(items, output, container, colorVariableName) {
+  if (!items.length || !output || !container) {
+    return;
+  }
+
+  const activateItem = (item) => {
+    items.forEach((button) => {
+      const isActive = button === item;
+
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+
+    output.textContent = item.dataset.copy || '';
+
+    const tone = item.getAttribute('data-color');
+    if (tone) {
+      container.style.setProperty(colorVariableName, tone);
+    }
+  };
+
+  items.forEach((item) => {
+    item.addEventListener('mouseenter', () => activateItem(item));
+    item.addEventListener('focus', () => activateItem(item));
+    item.addEventListener('click', () => activateItem(item));
+  });
+
+  activateItem(items.find((item) => item.classList.contains('is-active')) || items[0]);
+}
+
+function initEditorialInteractions() {
+  bindInteractiveCopy(dom.homeSignals, dom.signalOutput, dom.homeHeroFrame, '--hero-accent');
+  bindInteractiveCopy(dom.homeVerbChips, dom.verbOutput, dom.homeShowcaseFrame, '--showcase-accent');
+
+  const resetHeroPointer = () => {
+    if (!dom.homeHeroFrame) {
+      return;
+    }
+
+    dom.homeHeroFrame.style.setProperty('--hero-shift-x', '0px');
+    dom.homeHeroFrame.style.setProperty('--hero-shift-y', '0px');
+    dom.homeHeroFrame.style.setProperty('--hero-spot-x', '52%');
+    dom.homeHeroFrame.style.setProperty('--hero-spot-y', '38%');
+  };
+
+  const resetShowcasePointer = () => {
+    if (!dom.homeShowcaseFrame) {
+      return;
+    }
+
+    dom.homeShowcaseFrame.style.setProperty('--showcase-spot-x', '52%');
+    dom.homeShowcaseFrame.style.setProperty('--showcase-spot-y', '50%');
+  };
+
+  if (!prefersReducedMotion() && hasFinePointer()) {
+    if (dom.homeHeroFrame) {
+      dom.homeHeroFrame.addEventListener('pointermove', (event) => {
+        const rect = dom.homeHeroFrame.getBoundingClientRect();
+        const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+        const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+
+        dom.homeHeroFrame.style.setProperty('--hero-shift-x', `${((x - 0.5) * 52).toFixed(2)}px`);
+        dom.homeHeroFrame.style.setProperty('--hero-shift-y', `${((y - 0.5) * 38).toFixed(2)}px`);
+        dom.homeHeroFrame.style.setProperty('--hero-spot-x', `${(x * 100).toFixed(1)}%`);
+        dom.homeHeroFrame.style.setProperty('--hero-spot-y', `${(y * 100).toFixed(1)}%`);
+      }, { passive: true });
+
+      dom.homeHeroFrame.addEventListener('pointerleave', resetHeroPointer);
+    }
+
+    if (dom.homeShowcaseFrame) {
+      dom.homeShowcaseFrame.addEventListener('pointermove', (event) => {
+        const rect = dom.homeShowcaseFrame.getBoundingClientRect();
+        const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+        const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+
+        dom.homeShowcaseFrame.style.setProperty('--showcase-spot-x', `${(x * 100).toFixed(1)}%`);
+        dom.homeShowcaseFrame.style.setProperty('--showcase-spot-y', `${(y * 100).toFixed(1)}%`);
+      }, { passive: true });
+
+      dom.homeShowcaseFrame.addEventListener('pointerleave', resetShowcasePointer);
+    }
+  } else {
+    resetHeroPointer();
+    resetShowcasePointer();
+  }
+
+  const updateHeroProgress = () => {
+    if (!dom.homeHeroFrame) {
+      return;
+    }
+
+    const heroPanel = dom.homeHeroFrame.closest('.panel') || dom.homeHeroFrame;
+    const rect = heroPanel.getBoundingClientRect();
+    const progress = clamp((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0, 1);
+
+    dom.homeHeroFrame.style.setProperty('--hero-progress', progress.toFixed(3));
+  };
+
+  updateHeroProgress();
+
+  window.addEventListener('scroll', updateHeroProgress, { passive: true });
+  window.addEventListener('resize', updateHeroProgress, { passive: true });
 }
 
 function initCursorSystem() {
@@ -646,4 +761,5 @@ splitHeadingLines();
 initVideoBackground();
 initSceneVideos();
 initCursorSystem();
+initEditorialInteractions();
 initGsapMotion();
