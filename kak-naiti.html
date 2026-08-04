@@ -18,9 +18,24 @@
   <div class="color-orb" aria-hidden="true"></div>
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
-  <audio class="site-audio" autoplay loop preload="auto" hidden data-volume="0.08">
-    <source src="media/sensitive-bg.mp3?v=20260401-bgmusic1" type="audio/mpeg" />
-  </audio>
+  <nav class="route-map" aria-label="Маршрут сайта">
+    <a class="route-map-item" href="index.html">
+      <span class="route-map-index">00</span>
+      <span class="route-map-label">вход</span>
+    </a>
+    <a class="route-map-item" href="kto-my.html">
+      <span class="route-map-index">01</span>
+      <span class="route-map-label">кто мы</span>
+    </a>
+    <a class="route-map-item" href="chto-my-delaem.html">
+      <span class="route-map-index">02</span>
+      <span class="route-map-label">что делаем</span>
+    </a>
+    <a class="route-map-item is-active" href="kak-naiti.html" aria-current="page">
+      <span class="route-map-index">03</span>
+      <span class="route-map-label">как найти</span>
+    </a>
+  </nav>
 
   <main class="subpage-main">
     <section class="subpage-panel container panel reveal" data-tone="calm">
@@ -83,8 +98,8 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="script.js?v=20260401-bgmusic1"></script>
+  <script src="vendor/gsap/gsap.min.js"></script>
+  <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+  <script src="script.js?v=20260804-noaudio1"></script>
 </body>
 </html>

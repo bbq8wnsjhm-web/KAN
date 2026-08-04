@@ -1,5 +1,6 @@
 Thumbs.db
 Desktop.ini
 
-моушнсайт/Backup/
-моушнсайт/Log/
+tmp-chrome-profile/
+tmp-*.png
+media/*.mov
