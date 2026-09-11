@@ -1041,23 +1041,6 @@ h2 {
   color: #1d1f24;
 }
 
-.color-orb {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 7;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.24;
-  pointer-events: none;
-  background: radial-gradient(circle, var(--orb-color), rgba(255, 255, 255, 0));
-  filter: blur(30px) saturate(1.12);
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-}
-
 .cursor-dot,
 .cursor-ring {
   position: fixed;
@@ -1222,11 +1205,6 @@ body.page-what .page-what-cube-video {
   filter: saturate(1.08) contrast(1.06) brightness(0.98);
 }
 
-body.page-what .color-orb {
-  opacity: 0.05;
-  filter: blur(22px) saturate(1.02);
-}
-
 body.page-what .cursor-dot {
   background: #f5f2eb;
   box-shadow: 0 0 20px rgba(245, 242, 235, 0.28);
@@ -1250,9 +1228,8 @@ body.page-what .cursor-ring.active {
     ". . . . . . . . utility utility utility utility"
     "left-copy left-copy left-copy . . . . . right-block right-block right-block right-block"
     "question question question question . . . . right-block right-block right-block right-block"
-    ". . . . . . . . library library library library"
-    "nav nav nav nav . . . . . . . .";
-  grid-template-rows: auto auto auto auto minmax(3.4rem, 1fr) auto;
+    ". . . . . . . . library library library library";
+  grid-template-rows: auto auto auto auto minmax(3.4rem, 1fr);
   column-gap: clamp(1rem, 1.65vw, 1.45rem);
   row-gap: clamp(1.15rem, 2.25vw, 2.1rem);
   align-items: start;
@@ -1474,12 +1451,9 @@ body.page-kto .kto-action-graphite:focus-visible {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-areas:
     "hero hero hero hero hero hero . . home-link home-link home-link home-link"
-    ". . . . . . . . . . . ."
-    "emergence emergence emergence . . . . . place place place place"
-    ". . . . . . . . . . . ."
-    "whole whole whole whole . . . . definition definition definition definition"
-    "nav nav nav nav . . share share share share share share";
-  grid-template-rows: auto minmax(4.4rem, 1fr) auto minmax(4rem, 1fr) auto auto;
+    ". . . . . . . . place place place place"
+    "share share share share share share . . definition definition definition definition";
+  grid-template-rows: auto minmax(2rem, 1fr) auto;
   column-gap: clamp(1rem, 1.7vw, 1.5rem);
   row-gap: clamp(1.15rem, 2.3vw, 2.15rem);
   align-items: start;
@@ -1566,7 +1540,7 @@ body.page-kto .kto-action-graphite:focus-visible {
 
 .kto-share {
   grid-area: share;
-  justify-self: end;
+  justify-self: start;
   align-self: end;
   margin: 0;
   max-width: 36rem;
@@ -1581,12 +1555,12 @@ body.page-kto .kto-action-graphite:focus-visible {
 .kto-share-top {
   display: grid;
   grid-template-columns: repeat(4, auto);
-  justify-content: end;
+  justify-content: start;
   column-gap: clamp(1rem, 2.2vw, 2.35rem);
 }
 
 .kto-share-bottom {
-  justify-self: end;
+  justify-self: start;
 }
 
 .kto-editorial-nav {
@@ -1804,9 +1778,8 @@ body.page-find .cursor-ring.active {
     "headline headline headline headline headline headline . . home-link home-link home-link home-link"
     ". . . . . . . . chat chat chat chat"
     "channel channel channel channel . . . . contact contact contact contact"
-    "when when when when . . . . contact contact contact contact"
-    ". . . . . . . . nav nav nav nav";
-  grid-template-rows: auto auto auto auto auto;
+    ". . . . . . . . contact contact contact contact";
+  grid-template-rows: auto auto auto auto;
   column-gap: clamp(1rem, 1.7vw, 1.45rem);
   row-gap: clamp(1.2rem, 2.4vw, 2.3rem);
   align-items: start;
@@ -1836,8 +1809,7 @@ body.page-find .cursor-ring.active {
 }
 
 .find-chat,
-.find-channel,
-.find-when {
+.find-channel {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: clamp(0.75rem, 1.4vw, 1.05rem);
@@ -1856,9 +1828,17 @@ body.page-find .cursor-ring.active {
   max-width: 22rem;
 }
 
-.find-when {
-  grid-area: when;
-  max-width: 22rem;
+.find-section-link {
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+}
+
+.find-section-link:hover,
+.find-section-link:focus-visible {
+  color: #f5f2eb;
+  text-decoration: underline;
 }
 
 .find-mark {
@@ -1933,23 +1913,6 @@ body.page-find .cursor-ring.active {
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 0.14em;
-}
-
-.find-contact-qr {
-  width: clamp(6.6rem, 10vw, 8.4rem);
-  padding: clamp(0.48rem, 0.9vw, 0.7rem);
-  border-radius: 1.35rem;
-  background: rgba(8, 8, 10, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 1.1rem 2.8rem rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(10px) saturate(118%);
-  -webkit-backdrop-filter: blur(10px) saturate(118%);
-}
-
-.find-contact-qr-image {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .find-nav {
@@ -2245,8 +2208,7 @@ body.page-what p {
       "headline headline headline headline headline headline"
       "right-block right-block right-block right-block right-block right-block"
       "left-copy left-copy left-copy question question question"
-      "library library library library library library"
-      "nav nav nav nav nav nav";
+      "library library library library library library";
     grid-template-rows: auto;
     row-gap: 1.6rem;
     padding: 1.5rem;
@@ -2289,8 +2251,7 @@ body.page-what p {
       "home-link home-link home-link home-link home-link home-link"
       "headline headline headline headline headline headline"
       "chat chat chat contact contact contact"
-      "channel channel channel contact contact contact"
-      "when when when nav nav nav";
+      "channel channel channel contact contact contact";
     grid-template-rows: auto;
     row-gap: 1.7rem;
     padding: 1.5rem;
@@ -2312,17 +2273,12 @@ body.page-what p {
     max-width: 17rem;
   }
 
-  .find-channel,
-  .find-when {
+  .find-channel {
     max-width: 19rem;
   }
 
   .find-contact-title {
     font-size: clamp(1.8rem, 4.4vw, 2.4rem);
-  }
-
-  .find-contact-qr {
-    width: clamp(6.1rem, 14vw, 7.4rem);
   }
 
   .kto-editorial-frame {
@@ -2331,9 +2287,8 @@ body.page-what p {
     grid-template-areas:
       "home-link home-link home-link home-link home-link home-link"
       "hero hero hero hero hero hero"
-      "emergence emergence emergence place place place"
-      "whole whole whole definition definition definition"
-      "nav nav nav share share share";
+      "place place place definition definition definition"
+      "share share share . . .";
     grid-template-rows: auto;
     row-gap: 1.7rem;
     padding: 1.5rem;
@@ -2445,9 +2400,7 @@ body.page-what p {
       "headline"
       "chat"
       "channel"
-      "when"
-      "contact"
-      "nav";
+      "contact";
     row-gap: 1.3rem;
     padding: 1.25rem;
   }
@@ -2455,7 +2408,6 @@ body.page-what p {
   .find-manifesto,
   .find-chat,
   .find-channel,
-  .find-when,
   .find-contact,
   .find-nav {
     justify-self: start;
@@ -2478,8 +2430,7 @@ body.page-what p {
   }
 
   .find-chat,
-  .find-channel,
-  .find-when {
+  .find-channel {
     grid-template-columns: auto 1fr;
     column-gap: 0.8rem;
   }
@@ -2498,10 +2449,6 @@ body.page-what p {
     max-width: 100%;
   }
 
-  .find-contact-qr {
-    width: clamp(5.6rem, 30vw, 6.9rem);
-  }
-
   .find-nav {
     gap: 0.7rem;
   }
@@ -2517,12 +2464,9 @@ body.page-what p {
     grid-template-areas:
       "home-link"
       "hero"
-      "emergence"
       "place"
-      "whole"
       "definition"
-      "share"
-      "nav";
+      "share";
     row-gap: 1.3rem;
     padding: 1.25rem;
   }
@@ -2585,8 +2529,7 @@ body.page-what p {
       "left-copy"
       "question"
       "right-block"
-      "library"
-      "nav";
+      "library";
     row-gap: 1.3rem;
     padding: 1.25rem;
   }

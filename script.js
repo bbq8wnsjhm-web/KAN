@@ -5,13 +5,11 @@ const dom = {
   body: document.body,
   dot: document.querySelector('.cursor-dot'),
   ring: document.querySelector('.cursor-ring'),
-  orb: document.querySelector('.color-orb'),
   words: Array.from(document.querySelectorAll('.motion-word')),
   panels: Array.from(document.querySelectorAll('.panel')),
   videos: Array.from(document.querySelectorAll('video')),
   liquidVideo: document.querySelector('.liquid-bg'),
   liquidOverlay: document.querySelector('.liquid-overlay'),
-  canvas: document.querySelector('.webgl-bg'),
   homeHeroFrame: document.querySelector('.home-hero-frame'),
   homeShowcaseFrame: document.querySelector('.home-showcase-frame'),
   homeSignals: Array.from(document.querySelectorAll('.home-signal')),
@@ -24,10 +22,7 @@ const interaction = {
   mouseX: window.innerWidth * 0.5,
   mouseY: window.innerHeight * 0.5,
   ringX: window.innerWidth * 0.5,
-  ringY: window.innerHeight * 0.5,
-  orbX: window.innerWidth * 0.5,
-  orbY: window.innerHeight * 0.5,
-  orbEnergy: 0
+  ringY: window.innerHeight * 0.5
 };
 
 const backgroundStateClasses = ['has-video', 'no-video', 'reduced-motion'];
@@ -253,7 +248,7 @@ function initEditorialInteractions() {
 }
 
 function initCursorSystem() {
-  if (prefersReducedMotion() || !hasFinePointer() || !dom.dot || !dom.ring || !dom.orb) {
+  if (prefersReducedMotion() || !hasFinePointer() || !dom.dot || !dom.ring) {
     return;
   }
 
@@ -268,15 +263,8 @@ function initCursorSystem() {
   const animateCursor = () => {
     interaction.ringX += (interaction.mouseX - interaction.ringX) * 0.16;
     interaction.ringY += (interaction.mouseY - interaction.ringY) * 0.16;
-    interaction.orbX += (interaction.mouseX - interaction.orbX) * 0.08;
-    interaction.orbY += (interaction.mouseY - interaction.orbY) * 0.08;
-
     dom.ring.style.left = `${interaction.ringX}px`;
     dom.ring.style.top = `${interaction.ringY}px`;
-    dom.orb.style.left = `${interaction.orbX}px`;
-    dom.orb.style.top = `${interaction.orbY}px`;
-
-    interaction.orbEnergy += (0 - interaction.orbEnergy) * 0.06;
 
     requestAnimationFrame(animateCursor);
   };
@@ -284,20 +272,11 @@ function initCursorSystem() {
   const setWordHoverState = (element, isActive) => {
     const tone = element.getAttribute('data-color') || '#ff8a4c';
 
-    document.documentElement.style.setProperty('--orb-color', tone);
-    interaction.orbEnergy = isActive ? 1 : 0.45;
     dom.ring.classList.toggle('active', isActive);
 
     if (!window.gsap) {
       return;
     }
-
-    window.gsap.to(dom.orb, {
-      opacity: isActive ? 0.42 : 0.24,
-      scale: isActive ? 1.18 : 1,
-      duration: isActive ? 0.45 : 0.5,
-      ease: isActive ? 'power3.out' : 'power2.out'
-    });
 
     window.gsap.to(element, {
       duration: isActive ? 0.45 : 0.4,
@@ -683,7 +662,6 @@ function initVideoBackground() {
 
   if (!liquidVideo) {
     setBackgroundState('no-video');
-    initWebGLBackground();
     return;
   }
 
@@ -699,31 +677,27 @@ function initVideoBackground() {
   liquidVideo.setAttribute('muted', '');
   liquidVideo.setAttribute('playsinline', '');
 
-  let settled = false;
-
-  const settleVideoState = (state, onSettle) => {
-    if (settled) {
-      return;
-    }
-
-    settled = true;
-    setBackgroundState(state);
-
-    if (typeof onSettle === 'function') {
-      onSettle();
-    }
-  };
+  let videoFailed = false;
 
   const requestPlayback = () => {
     const playPromise = liquidVideo.play();
 
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => {});
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise
+        .then(() => setBackgroundState('has-video'))
+        .catch(() => {});
+      return;
+    }
+
+    if (!liquidVideo.paused && liquidVideo.readyState >= 2) {
+      setBackgroundState('has-video');
     }
   };
 
   const fallbackTimer = window.setTimeout(() => {
-    settleVideoState('no-video', initWebGLBackground);
+    if (!videoFailed && !dom.body.classList.contains('has-video')) {
+      setBackgroundState('no-video');
+    }
   }, 4000);
 
   const clearFallbackTimer = () => {
@@ -732,12 +706,13 @@ function initVideoBackground() {
 
   liquidVideo.addEventListener('playing', () => {
     clearFallbackTimer();
-    settleVideoState('has-video');
+    setBackgroundState('has-video');
   }, { once: true });
 
   liquidVideo.addEventListener('error', () => {
+    videoFailed = true;
     clearFallbackTimer();
-    settleVideoState('no-video', initWebGLBackground);
+    setBackgroundState('no-video');
   }, { once: true });
 
   liquidVideo.addEventListener('canplay', requestPlayback, { once: true });
@@ -751,7 +726,7 @@ function initVideoBackground() {
       return;
     }
 
-    if (!settled || dom.body.classList.contains('has-video')) {
+    if (!videoFailed) {
       requestPlayback();
     }
   });
