@@ -2618,3 +2618,388 @@ body.page-what p {
     transform: scale(1.02) !important;
   }
 }
+
+/* Figma variant 1 desktop overrides */
+@media (min-width: 1101px) {
+  .home-hero-frame,
+  .kto-editorial-frame,
+  .find-editorial-frame {
+    min-height: calc(100svh - 2rem);
+    padding: 0;
+    display: block;
+  }
+
+  .what-editorial-frame {
+    min-height: 815px;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+  }
+
+  .home-hero-frame > *,
+  .kto-editorial-frame > *,
+  .what-editorial-frame > *,
+  .find-editorial-frame > * {
+    min-width: 0;
+  }
+
+  .home-hero-topline {
+    position: absolute;
+    left: 40px;
+    top: 27px;
+    max-width: none;
+    font-size: 13.6px;
+    line-height: 1;
+    letter-spacing: 0.18em;
+  }
+
+  .home-kicker {
+    position: absolute;
+    left: 40px;
+    top: 85px;
+    font-size: 48.7px;
+    line-height: 0.72;
+    letter-spacing: -0.021em;
+  }
+
+  .home-hero-footnote {
+    position: absolute;
+    left: 224px;
+    top: 88px;
+    width: 160px;
+    max-width: 160px;
+    font-size: 18.9px;
+    line-height: 1.3;
+  }
+
+  .home-club-wrap {
+    position: absolute;
+    left: 40px;
+    top: 151px;
+    width: 619px;
+    transform: none;
+  }
+
+  .home-club {
+    gap: 6.75px;
+    font-size: 84.5px;
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+  }
+
+  .home-club-line-shift {
+    margin-left: 192px;
+  }
+
+  .home-friday-wrap {
+    position: absolute;
+    left: 416px;
+    top: 430px;
+    width: 327px;
+    transform: none;
+  }
+
+  .home-friday {
+    max-width: none;
+    font-size: 48.7px;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .home-friday-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .home-friday-line:nth-child(2) {
+    padding-left: 76px;
+  }
+
+  .home-friday-line:nth-child(3) {
+    padding-left: 118px;
+  }
+
+  .home-signal-caption {
+    position: absolute;
+    left: 806px;
+    top: 18px;
+    width: 343px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    transform: none;
+  }
+
+  .home-signal-copy {
+    font-size: 20.8px;
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+  }
+
+  .home-signal-stack {
+    position: absolute;
+    left: 806px;
+    top: 479px;
+    width: 343px;
+    gap: 11.5px;
+    transform: none;
+  }
+
+  .home-signal {
+    min-height: 55px;
+    padding: 15.7px 16px;
+    gap: 12.8px;
+  }
+
+  .home-signal-title {
+    font-size: 20.5px;
+    line-height: 1.08;
+  }
+
+  .home-scroll-link {
+    position: absolute;
+    left: 40px;
+    top: 646px;
+    width: 54px;
+    min-width: 54px;
+    padding: 14px 18px;
+  }
+
+  body.page-kto .subpage-home-link {
+    position: absolute;
+    left: 43px;
+    top: 43px;
+    justify-self: auto;
+    max-width: none;
+    text-align: left;
+    color: rgba(173, 168, 159, 0.78);
+  }
+
+  .kto-hero {
+    position: absolute;
+    left: 43px;
+    top: 67px;
+    max-width: none;
+    font-size: 84.5px;
+    line-height: 0.992;
+    letter-spacing: -0.061em;
+  }
+
+  .kto-place {
+    position: absolute;
+    left: 43px;
+    top: 494px;
+    justify-self: auto;
+    max-width: 330px;
+    font-size: 20.8px;
+    line-height: 1.16;
+    font-weight: 500;
+  }
+
+  .kto-place .kto-line:nth-child(2) {
+    margin-left: 143px;
+  }
+
+  .kto-definition-block {
+    position: absolute;
+    left: 818px;
+    top: 57px;
+    max-width: 344px;
+    width: 344px;
+    column-gap: 17.6px;
+  }
+
+  .kto-definition-mark {
+    font-size: 48.7px;
+    line-height: 0.84;
+  }
+
+  .kto-definition-copy {
+    width: 376px;
+    font-size: 20.8px;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  .kto-share {
+    position: absolute;
+    left: 592px;
+    top: 602px;
+    width: 535px;
+    max-width: 576px;
+    gap: 2px;
+    font-size: 48.7px;
+    line-height: 0.94;
+    font-weight: 500;
+    letter-spacing: -0.038em;
+  }
+
+  .kto-share-top {
+    column-gap: 31.5px;
+  }
+
+  .kto-share-bottom {
+    margin-left: 235px;
+  }
+
+  body.page-what .subpage-home-link,
+  body.page-find .subpage-home-link {
+    position: absolute;
+    right: 43px;
+    top: 45px;
+    justify-self: auto;
+    max-width: none;
+    text-align: right;
+  }
+
+  .what-manifesto {
+    position: absolute;
+    left: 43px;
+    top: 47px;
+    max-width: none;
+    font-size: 84.5px;
+    line-height: 0.962;
+    letter-spacing: -0.053em;
+  }
+
+  .what-utility {
+    position: absolute;
+    left: 985px;
+    top: 340px;
+    justify-self: auto;
+    gap: 0;
+    font-size: 18.9px;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+
+  .what-gather {
+    display: contents;
+  }
+
+  .what-gather-title {
+    position: absolute;
+    left: 43px;
+    top: 428px;
+    max-width: 364px;
+    font-size: 48.7px;
+    line-height: 0.826;
+    letter-spacing: -0.032em;
+  }
+
+  .what-gather-copy {
+    position: absolute;
+    left: 45px;
+    top: 607px;
+    max-width: 409px;
+    font-size: 20.8px;
+    line-height: 1.3;
+  }
+
+  .what-library {
+    position: absolute;
+    left: 43px;
+    top: 522px;
+    justify-self: auto;
+    max-width: 430px;
+    column-gap: 18px;
+  }
+
+  .what-library-mark {
+    margin-left: 22px;
+    font-size: 50.1px;
+    line-height: 0.85;
+  }
+
+  .what-library-title {
+    max-width: 361px;
+    font-size: 35.8px;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+
+  .what-question {
+    position: absolute;
+    left: 734px;
+    top: 427px;
+    max-width: 430px;
+    font-size: 48.7px;
+    line-height: 0.855;
+    letter-spacing: -0.034em;
+  }
+
+  .what-side-note {
+    position: absolute;
+    left: 734px;
+    top: 608px;
+    max-width: 304px;
+    font-size: 20.8px;
+    line-height: 1.3;
+  }
+
+  .find-manifesto {
+    position: absolute;
+    left: 43px;
+    top: 45px;
+    max-width: none;
+    font-size: 84.5px;
+    line-height: 0.99;
+    letter-spacing: -0.054em;
+  }
+
+  .find-chat {
+    position: absolute;
+    left: 783px;
+    top: 283px;
+    max-width: 312px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .find-channel {
+    position: absolute;
+    left: -3px;
+    top: 515px;
+    max-width: 390px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    column-gap: 4px;
+  }
+
+  .find-mark {
+    font-size: 51.6px;
+    line-height: 0.82;
+  }
+
+  .find-section-title {
+    font-size: 48.7px;
+    line-height: 0.84;
+    letter-spacing: -0.033em;
+  }
+
+  .find-copy {
+    font-size: 20.8px;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  .find-contact {
+    position: absolute;
+    left: 829px;
+    top: 517px;
+    justify-self: auto;
+    max-width: 304px;
+    gap: 15px;
+  }
+
+  .find-contact-title {
+    font-size: 48.7px;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+
+  .find-contact-link {
+    max-width: 288px;
+    font-size: 20.8px;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+}
